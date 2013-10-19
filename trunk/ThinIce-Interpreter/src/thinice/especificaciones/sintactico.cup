@@ -1,4 +1,4 @@
-package especificaciones;
+package thinice.especificaciones;
 import java_cup.runtime.*;
 
 terminal PROGRAMA, PCOMA;
