@@ -6,7 +6,7 @@ package thinice.interpreter;
 
 /**
  *
- * @author Oscar
+ * @author Moises
  */
 public class ThinIceInterpreter {
 
