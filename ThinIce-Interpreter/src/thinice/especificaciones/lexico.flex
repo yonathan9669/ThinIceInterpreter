@@ -35,11 +35,11 @@ import java_cup.runtime.Symbol;
 "sino" 			{ return new Symbol(sym.SINO); }
 "repita" 		{ return new Symbol(sym.REPITA); }
 "hasta" 		{ return new Symbol(sym.HASTA); }
-"para" 			{ return new Symbol(sym.PAR_PARA); }
+"para" 			{ return new Symbol(sym.PARA); }
 boolean			{ return new Symbol(sym.TIPOBOOL); }
 entero			{ return new Symbol(sym.TIPOENTERO); }
-true			{ return new Symbol(sym.BOOL,new boolean(true)); }
-false			{ return new Symbol(sym.BOOL,new boolean(false)); }
+true			{ return new Symbol(sym.BOOL,new Boolean(true)); }
+false			{ return new Symbol(sym.BOOL,new Boolean(false)); }
 [0-9]+			{ return new Symbol(sym.ENTERO,new Integer(yytext())); }
 [a-zA-Z]+		{ return new Symbol(sym.ID,new String(yytext())); }
 [\n\r ]+		{ }
