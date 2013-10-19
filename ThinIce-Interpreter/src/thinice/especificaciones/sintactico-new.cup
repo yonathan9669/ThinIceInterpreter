@@ -1,0 +1,131 @@
+package especificaciones;
+import java_cup.runtime.*;
+
+terminal PROGRAMA, PCOMA;
+terminal OP_SUMA, OP_RESTA, OP_MULTI, OP_DIVI, OP_MODU, ASIGNA;
+terminal OP_CONJ, OP_DISJ, OP_NEG;
+terminal MENOR, MENOR_IGUAL, MAYOR, MAYOR_IGUAL, IGUAL, DIFERENTE;
+terminal PAR_IZ, PAR_DE, LLA_IZ, LLA_DE, COR_IZ, COR_DE;
+terminal SI, SINO, REPITA, HASTA, PARA;
+terminal TIPOBOOL, TIPOENTERO;
+terminal boolean BOOL;
+terminal Integer ENTERO;
+terminal String ID;
+
+non terminal programa;
+non terminal lista_sent;
+non terminal sent;
+non terminal sent_decl;
+non terminal sent_si;
+non terminal sent_repita_hasta;
+non terminal sent_repita_para;
+non terminal sent_funcion;
+non terminal exp;
+non terminal exp_booleana;
+non terminal exp_logica;
+non terminal exp_relacional;
+non terminal op_relacional;
+non terminal exp_aritmetica;
+non terminal sent_asignacion;
+non terminal exp_para;
+non terminal var;
+non terminal termino;
+non terminal factor;
+non terminal vector;
+non terminal booleano;
+
+precedence left PAR_IZ, PAR_DE;
+precedence left OP_SUMA, OP_RESTA;
+precedence left OP_MULTI, OP_DIVI, OP_MODU;
+precedence left OP_CONJ, OP_DISJ;
+precedence left IGUAL, MAYOR, MAYOR_IGUAL, MENOR, MENOR_IGUAL, DIFERENTE;
+
+programa ::= PROGRAMA PAR_IZ PAR_DE LLA_IZ lista_sent LLA_DE;
+
+lista_sent ::=	lista_sent sent
+			|	sent
+			;
+
+sent ::=	sent_decl PCOMA 
+		|	sent_si
+		|	sent_repita_hasta
+		|	sent_repita_para
+		|	sent_funcion PCOMA
+		|	sent_asignacion PCOMA
+		;
+				
+sent_decl ::= 	TIPOENTERO var
+			|	TIPOBOOL var
+			|	TIPOENTERO sent_asignacion
+			|	TIPOBOOL sent_asignacion
+			;
+				
+sent_si ::= 	SI PAR_IZ exp_booleana PAR_DE LLA_IZ lista_sent LLA_DE
+ 			|	SI PAR_IZ exp_booleana PAR_DE LLA_IZ lista_sent LLA_DE 
+ 				SINO LLA_IZ lista_sent LLA_DE
+ 			;
+ 
+sent_repita_hasta ::= REPITA lista_sent HASTA exp_booleana PCOMA;
+
+sent_repita_para ::= PARA exp_para LLA_IZ lista_sent LLA_DE;
+ 
+exp_para ::= PAR_IZ sent_asignacion PCOMA sent_asignacion PCOMA exp_booleana PAR_DE;
+
+sent_funcion ::= 	ID PAR_IZ factor PAR_DE
+						|	ID PAR_IZ PAR_DE
+						;
+
+exp ::= 	exp_booleana
+		|	exp_aritmetica
+		;
+		
+sent_asignacion ::= 	var ASIGNA sent_asignacion
+					|	var ASIGNA exp
+					;
+					
+exp_booleana ::=		exp_logica
+					|	exp_relacional
+					;
+
+exp_logica ::=		exp_booleana OP_CONJ booleano
+				|	exp_booleana OP_DISJ booleano
+				|	OP_NEG booleano
+				|	booleano
+				;
+  
+exp_relacional ::=		exp op_relacional exp;
+
+op_relacional ::=		IGUAL
+					|	MAYOR
+					|	MAYOR_IGUAL
+					|	MENOR
+					|	MENOR_IGUAL
+					|	DIFERENTE
+					;
+ 		 
+exp_aritmetica ::= 		exp_aritmetica OP_SUMA termino 
+ 					| 	exp_aritmetica OP_RESTA termino
+ 					| 	termino
+ 					;
+
+booleano ::=		PAR_IZ exp_booleana PAR_DE
+				|	BOOL
+				|	var
+				;
+
+termino ::=		termino OP_MULTI factor
+ 			|	termino OP_DIVI factor
+  			|	termino OP_MODU factor				
+ 			| 	factor
+ 			;
+
+factor ::=		PAR_IZ exp_aritmetica PAR_DE
+ 			|	ENTERO
+ 			|	var
+ 			;
+ 			
+vector ::= ID COR_IZ exp_aritmetica COR_DE;
+
+var ::=			vector
+			|	ID
+			;
