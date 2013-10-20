@@ -43,7 +43,7 @@ precedence left IGUAL, MAYOR, MAYOR_IGUAL, MENOR, MENOR_IGUAL, DIFERENTE;
 programa ::= PROGRAMA PAR_IZ PAR_DE LLA_IZ lista_sent LLA_DE;
 
 lista_sent ::=	lista_sent sent
-			|	sent
+			|	sent 
 			;
 
 sent ::=	sent_decl PCOMA 
