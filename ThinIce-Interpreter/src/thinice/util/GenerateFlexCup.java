@@ -23,9 +23,9 @@ public class GenerateFlexCup {
     
     public void generar() throws internal_error, IOException, Exception{
         String cup_opts[] = new String[]{"-destdir", cupFile.getParent(), "-parser", 
-                                         "parser", "-expect", "10000", "-dump", 
+                                         "ThinIceParser", "-expect", "10000", "-dump", 
                                          "-nopositions", "-interface", "-symbols",
-                                         "sym", "-package", "parser",
+                                         "ThinIceTokenDef", "-package", "parser",
                                          cupFile.getPath()};
         JFlex.Main.generate(lexFile);
         System.out.print("Ejecutando java_cup");
