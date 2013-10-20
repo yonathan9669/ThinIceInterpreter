@@ -1,0 +1,189 @@
+package thinice.parser;
+
+//---------------------------Imported Libraries---------------------------------
+// <editor-fold desc="Importaciones">
+
+import java_cup.runtime.*;
+import thinice.util.*;
+import thinice.lexer.*;
+import thinice.AST.*;
+import thinice.TS.*;
+
+//  </editor-fold>
+
+//---------------------------Code Definition------------------------------------
+// <editor-fold desc="Definicion de Codigos">
+
+action code {: 
+
+    int getLinea() {
+	return ((ThinIceLexer)parser.getScanner()).getLinea();
+    }
+
+    int getColumna(){
+        return ((ThinIceLexer)parser.getScanner()).getColumna();
+    }
+
+    /*
+    SimboloAbstracto getNombreArchivo() {
+	return ((ThinIceLexer)parser.getScanner()).getNombreArchivo();
+    }
+    */
+:} 
+
+//  </editor-fold>
+
+//---------------------------Terminal Definition--------------------------------
+// <editor-fold desc="Terminales">
+
+terminal PROGRAMA, PCOMA;
+terminal TIPOBOOL, TIPOENTERO;
+terminal SI, SINO, REPITA, HASTA, PARA;
+terminal PAR_IZ, PAR_DE, LLA_IZ, LLA_DE, COR_IZ, COR_DE;
+terminal ASIGNA;
+terminal OP_SUMA, OP_RESTA, OP_MULTI, OP_DIVI, OP_MODU;
+terminal OP_CONJ, OP_DISJ, OP_NEG;
+terminal MENOR, MENOR_IGUAL, MAYOR, MAYOR_IGUAL, IGUAL, DIFERENTE;
+terminal BOOL;
+terminal ENTERO;
+terminal ID;
+
+//  </editor-fold>
+
+//---------------------------No Terminal Definition-----------------------------
+// <editor-fold desc="No Terminales">
+
+non terminal programa;
+non terminal lista_sent;
+//--------------------------------------------------
+non terminal sent;
+non terminal sent_decl;
+non terminal sent_asignacion;
+non terminal sent_si;
+non terminal sent_repita_hasta;
+non terminal sent_repita_para;
+non terminal sent_funcion;
+//--------------------------------------------------
+non terminal exp;
+non terminal exp_booleana;
+non terminal exp_logica;
+non terminal exp_relacional;
+non terminal op_relacional;
+non terminal exp_aritmetica;
+non terminal exp_para;
+//--------------------------------------------------
+non terminal termino;
+non terminal factor;
+non terminal vector;
+non terminal booleano;
+non terminal var;
+
+//  </editor-fold>
+
+//---------------------------Precedence Definition------------------------------
+// <editor-fold desc="Precedencias de Operadores">
+
+precedence left PAR_IZ, PAR_DE;
+precedence left LLA_IZ, LLA_DE;
+precedence left COR_IZ, COR_DE;
+precedence left OP_SUMA, OP_RESTA;
+precedence left OP_MULTI, OP_DIVI, OP_MODU;
+precedence left OP_CONJ, OP_DISJ;
+precedence left IGUAL, MAYOR, MAYOR_IGUAL, MENOR, MENOR_IGUAL, DIFERENTE;
+
+//  </editor-fold>
+
+//---------------------------Precedence Definition------------------------------
+// <editor-fold desc="Precedencias de Operadores">
+
+programa ::=                PROGRAMA PAR_IZ PAR_DE LLA_IZ lista_sent LLA_DE;
+
+lista_sent ::=              lista_sent sent
+                        |   sent 
+                        ;
+//------------------------------------------------------------------------------
+sent ::=                    sent_decl PCOMA 
+                        |   sent_si
+                        |   sent_repita_hasta
+                        |   sent_repita_para
+                        |   sent_funcion PCOMA
+                        |   sent_asignacion PCOMA
+                        ;
+//------------------------------------------------------------------------------
+sent_decl ::=               TIPOENTERO var
+                        |   TIPOBOOL var
+                        |   TIPOENTERO sent_asignacion
+                        |   TIPOBOOL sent_asignacion
+                        ;
+//------------------------------------------------------------------------------
+sent_si ::=                 SI PAR_IZ exp_booleana PAR_DE LLA_IZ lista_sent LLA_DE
+                        |   SI PAR_IZ exp_booleana PAR_DE LLA_IZ lista_sent LLA_DE 
+                            SINO LLA_IZ lista_sent LLA_DE
+                        ;
+//------------------------------------------------------------------------------
+sent_repita_hasta ::=       REPITA lista_sent HASTA exp_booleana PCOMA;
+//------------------------------------------------------------------------------
+sent_repita_para ::=        PARA exp_para LLA_IZ lista_sent LLA_DE;
+
+exp_para ::=                PAR_IZ sent_asignacion PCOMA sent_asignacion PCOMA exp_booleana PAR_DE;
+//------------------------------------------------------------------------------
+sent_funcion ::=            ID PAR_IZ factor PAR_DE
+                        |   ID PAR_IZ PAR_DE
+                        ;
+//------------------------------------------------------------------------------
+sent_asignacion ::=         var ASIGNA sent_asignacion
+			|   var ASIGNA exp
+			;
+//------------------------------------------------------------------------------
+exp ::=                     exp_booleana
+                        |   exp_aritmetica
+                        ;
+
+exp_booleana ::=            exp_logica
+			|   exp_relacional
+			;
+
+exp_logica ::=              exp_booleana OP_CONJ booleano
+			|   exp_booleana OP_DISJ booleano
+			|   OP_NEG booleano
+			|   booleano
+			;
+
+exp_relacional ::=          exp op_relacional exp;
+
+op_relacional ::=           IGUAL
+			|   MAYOR
+			|   MAYOR_IGUAL
+			|   MENOR
+			|   MENOR_IGUAL
+			|   DIFERENTE
+			;
+
+exp_aritmetica ::=          exp_aritmetica OP_SUMA termino 
+ 			|   exp_aritmetica OP_RESTA termino
+ 			|   termino
+ 			;
+//------------------------------------------------------------------------------
+booleano ::=                PAR_IZ exp_booleana PAR_DE
+			|   BOOL
+			|   var
+			;
+//------------------------------------------------------------------------------
+termino ::=                 termino OP_MULTI factor
+ 			|   termino OP_DIVI factor
+  			|   termino OP_MODU factor				
+ 			|   factor
+ 			;
+//------------------------------------------------------------------------------
+factor ::=                  PAR_IZ exp_aritmetica PAR_DE
+ 			|   ENTERO
+ 			|   var
+ 			;
+//------------------------------------------------------------------------------
+vector ::=                  ID COR_IZ exp_aritmetica COR_DE;
+//------------------------------------------------------------------------------
+var ::=                     vector
+			|   ID
+			;
+//------------------------------------------------------------------------------
+//  </editor-fold>

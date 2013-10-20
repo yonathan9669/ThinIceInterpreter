@@ -38,9 +38,9 @@ public class GenerateFlexCup {
     public static void main(String args[]){
         args = new String[2];
         
-        String path = "src/thinice/especificaciones/";
-        args[0] = path + "lexico.flex";
-        args[1] = path + "sintactico.cup";
+        String path = "src/thinice/";
+        args[0] = path + "lexer/ThinIceInterpreter.flex";
+        args[1] = path + "parser/ThinIceInterpreter.cup";
         
         if(args.length<2)
             System.err.println("Usar GeneraFlexCup.Main ruta_archivo_lex ruta_archivo_cup");
