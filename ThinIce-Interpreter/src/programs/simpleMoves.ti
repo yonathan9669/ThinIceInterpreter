@@ -11,7 +11,10 @@ programa(){
 	y := !y;
 	avanzar(x - 3);
 	mirarAbajo();
+
+	/* probando los errores */
 	9gG04_31pO
+	
 	y := x < 2;
 	avanzar(4);
 	mirarIzquierda();
