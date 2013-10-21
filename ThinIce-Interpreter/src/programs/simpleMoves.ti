@@ -1,17 +1,17 @@
 programa(){
 	entero x;
 	booleano y := true;
-	
+	/* probando los comentarios */
 	x := 10;
 	
-	y := (x + 2 >= 1) && (x * 2 <= 7);
+	y := (x + 2 >= 1) Y (x * 2 <= 7);
 	avanzar(x);
 	mirarArriba();
 	
 	y := !y;
 	avanzar(x - 3);
 	mirarAbajo();
-	
+	9gG04_31pO
 	y := x < 2;
 	avanzar(4);
 	mirarIzquierda();

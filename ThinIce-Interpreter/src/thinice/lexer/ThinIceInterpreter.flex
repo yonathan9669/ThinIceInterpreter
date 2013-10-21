@@ -33,9 +33,10 @@ import thinice.parser.ThinIceTokenDef;
 %line
 %column
 %cup
+%full
 
 BLANCO = [ \n\r\t]
-COMENTARIO = "{"[^}]*"}"
+COMENTARIO = "/*"[^}]*"*/"
 
 %%
 <YYINITIAL>{
@@ -80,10 +81,10 @@ O				{ return new Symbol(OR, new String("["+ getLinea() + ":" + getColumna() + "
 
 true|false		{ return new Symbol(BOOLEANO, new String("["+ getLinea() + ":" + getColumna() + "] -> " +  yytext())); }
 [0-9]+			{ return new Symbol(ENTERO, new String("["+ getLinea() + ":" + getColumna() + "] -> " +  yytext())); }
-[a-zA-Z_]+		{ return new Symbol(ID, new String("["+ getLinea() + ":" + getColumna() + "] -> " +  yytext())); }
+[a-zA-Z]+		{ return new Symbol(ID, new String("["+ getLinea() + ":" + getColumna() + "] -> " +  yytext())); }
 
 {BLANCO}		{}
 {COMENTARIO}	{}
-.				{ return new Symbol(ERROR,new String("["+ getLinea() + ":" + getColumna() + "] -> " +  yytext())); }
+.				{ return new Symbol(ERROR,new String("["+ getLinea() + ":" + getColumna() + "] ->\t" +  yytext() + "\tERROR")); }
 
 }
