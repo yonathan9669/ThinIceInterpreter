@@ -1,0 +1,22 @@
+programa(){
+	entero x;
+	booleano y := true;
+	
+	x := 10;
+	
+	y := (x + 2 >= 1) && (x * 2 <= 7);
+	avanzar(x);
+	mirarArriba();
+	
+	y := !y;
+	avanzar(x - 3);
+	mirarAbajo();
+	
+	y := x < 2;
+	avanzar(4);
+	mirarIzquierda();
+	
+	x := x - 8;
+	avanzar(x + 1);
+	mirarDerecha();
+}
