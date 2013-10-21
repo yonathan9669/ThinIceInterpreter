@@ -1,7 +1,6 @@
 package thinice.parser;
 
 //---------------------------Imported Libraries---------------------------------
-// <editor-fold desc="Importaciones">
 
 import java_cup.runtime.*;
 import thinice.util.*;
@@ -9,10 +8,7 @@ import thinice.lexer.*;
 import thinice.AST.*;
 import thinice.TS.*;
 
-//  </editor-fold>
-
 //---------------------------Code Definition------------------------------------
-// <editor-fold desc="Definicion de Codigos">
 
 action code {: 
 
@@ -31,10 +27,7 @@ action code {:
     */
 :}
 
-//  </editor-fold>
-
 //---------------------------Terminal Definition--------------------------------
-// <editor-fold desc="Terminales">
 
 terminal PROGRAM;
 terminal PAR_I, PAR_D, LLA_I, LLA_D, COR_I, COR_D, PUNT_C;
@@ -48,43 +41,37 @@ terminal BOOLEANO, ENTERO;
 terminal ID;
 terminal EMPTY, ERROR;
 
-//  </editor-fold>
-
 //---------------------------No Terminal Definition-----------------------------
-// <editor-fold desc="No Terminales">
 
-non terminal programa;
-non terminal lista_sent;
+nonterminal programa;
+nonterminal lista_sent;
 //--------------------------------------------------
-non terminal sent;
-non terminal sent_decl;
-non terminal tipo_var;
-non terminal sent_asig;
-non terminal func_call;
-non terminal lista_parm;
-non terminal sent_if;
-non terminal else;
-non terminal sent_do;
-non terminal sent_for;
+nonterminal sent;
+nonterminal sent_decl;
+nonterminal tipo_var;
+nonterminal sent_asig;
+nonterminal func_call;
+nonterminal lista_parm;
+nonterminal sent_if;
+nonterminal else;
+nonterminal sent_do;
+nonterminal sent_for;
 //--------------------------------------------------
-non terminal exp;
-non terminal exp_binaria;
-non terminal exp_booleana;
-non terminal op_comparacion;
-non terminal exp_aritmetica;
-non terminal op_aritmetica;
-non terminal exp_factor;
-non terminal op_factor;
-non terminal termino;
+nonterminal exp;
+nonterminal exp_binaria;
+nonterminal exp_booleana;
+nonterminal op_comparacion;
+nonterminal exp_aritmetica;
+nonterminal op_aritmetica;
+nonterminal exp_factor;
+nonterminal op_factor;
+nonterminal termino;
 //--------------------------------------------------
-non terminal literal;
-non terminal variable;
-non terminal vector;
-
-//  </editor-fold>
+nonterminal literal;
+nonterminal variable;
+nonterminal vector;
 
 //---------------------------Precedence Definition------------------------------
-// <editor-fold desc="Precedencias de Operadores">
 
 precedence left PAR_I, PAR_D;
 precedence left LLA_I, LLA_D;
@@ -92,99 +79,6 @@ precedence left COR_I, COR_D;
 precedence left SUMA, RESTA;
 precedence left MULTI, DIV, MOD;
 
-//  </editor-fold>
-
 //---------------------------Grammar Definition---------------------------------
-// <editor-fold desc="Definicion de la gramatica">
 
-programa ::=                PROGRAM PAR_I PAR_D LLA_I lista_sent LLA_D;
-//------------------------------------------------------------------------------
-lista_sent ::=              lista_sent sent
-                        |   sent 
-                        ;
-//------------------------------------------------------------------------------
-sent ::=                    sent_decl PUNT_C 
-                        |   sent_if
-                        |   sent_do
-                        |   sent_for
-                        |   func_call PUNT_C
-                        |   sent_asig PUNT_C
-                        ;
-//------------------------------------------------------------------------------
-sent_decl ::=               BOOL variable
-                        |   INT variable
-                        |   BOOL sent_asig
-                        |   INT sent_asig
-                        ;
-//------------------------------------------------------------------------------
-sent_if ::=                 IF PAR_I exp_booleana PAR_D LLA_I lista_sent LLA_D
-                        |   IF PAR_I exp_booleana PAR_D LLA_I lista_sent LLA_D 
-                            ELSE LLA_I lista_sent LLA_D
-                        ;
-//------------------------------------------------------------------------------
-sent_do ::=       DO lista_sent WHILE exp_booleana PUNT_C;
-//------------------------------------------------------------------------------
-sent_for ::=        FOR exp_para LLA_I lista_sent LLA_D;
-
-exp_para ::=                PAR_I sent_asig PUNT_C sent_asig PUNT_C exp_booleana PAR_D;
-//------------------------------------------------------------------------------
-func_call ::=            ID PAR_I factor PAR_D
-                        |   ID PAR_I PAR_D
-                        ;
-//------------------------------------------------------------------------------
-sent_asig ::=         variable ASIG sent_asig
-			|   variable ASIG exp
-			;
-//------------------------------------------------------------------------------
-exp ::=                     exp_booleana
-                        |   exp_aritmetica
-                        ;
-
-exp_booleana ::=            exp_logica
-			|   exp_relacional
-			;
-
-exp_logica ::=              exp_booleana AND booleano
-			|   exp_booleana OR booleano
-			|   NOT booleano
-			|   booleano
-			;
-
-exp_relacional ::=          exp op_relacional exp;
-
-op_relacional ::=           IGUAL
-			|   MAYOR
-			|   MAYOR_IGUAL
-			|   MENOR
-			|   MENOR_IGUAL
-			|   DIFERENTE
-			;
-
-exp_aritmetica ::=          exp_aritmetica SUMA termino 
- 			|   exp_aritmetica RESTA termino
- 			|   termino
- 			;
-//------------------------------------------------------------------------------
-booleano ::=                PAR_I exp_booleana PAR_D
-			|   BOOL
-			|   variable
-			;
-//------------------------------------------------------------------------------
-termino ::=                 termino MULTI factor
- 			|   termino DIV factor
-  			|   termino MOD factor				
- 			|   factor
- 			;
-//------------------------------------------------------------------------------
-factor ::=                  PAR_I exp_aritmetica PAR_D
- 			|   ENTERO
- 			|   variable
- 			;
-//------------------------------------------------------------------------------
-vector ::=                  ID COR_I exp_aritmetica COR_D;
-//------------------------------------------------------------------------------
-variable ::=                     vector
-			|   ID
-			;
-//------------------------------------------------------------------------------
-//  </editor-fold>
+programa ::=    PROGRAM PAR_I PAR_D LLA_I lista_sent LLA_D;

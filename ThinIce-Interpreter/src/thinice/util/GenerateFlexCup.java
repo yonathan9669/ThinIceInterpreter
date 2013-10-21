@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package thinice.util;
 
 import java.io.File;
@@ -9,10 +5,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java_cup.internal_error;
 
-/**
- *
- * @author Administrador
- */
 public class GenerateFlexCup {
     private File lexFile, cupFile;
 
@@ -36,12 +28,6 @@ public class GenerateFlexCup {
     }
     
     public static void main(String args[]){
-        args = new String[2];
-        
-        String path = "src/thinice/";
-        args[0] = path + "lexer/ThinIceInterpreter.flex";
-        args[1] = path + "parser/ThinIceInterpreter.cup";
-        
         if(args.length<2)
             System.err.println("Usar GeneraFlexCup.Main ruta_archivo_lex ruta_archivo_cup");
         else
