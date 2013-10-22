@@ -2,7 +2,7 @@ programa(){
 	entero x;
 	booleano y := true;
 
-	x := 10;
+	x := 3;
 	
 	y := (x + 2 >= 1) Y (x * 2 <= 7);
 	avanzar(x);
@@ -16,7 +16,7 @@ programa(){
 	avanzar(4);
 	mirarIzquierda();
 	
-	x := x - 8;
+	x := x / 4;
 	avanzar(x + 1);
 	mirarDerecha();
 

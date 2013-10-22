@@ -3,11 +3,13 @@ package thinice.AST;
 import java.io.PrintStream;
 import thinice.util.Utilidades;
 
-public class Not extends ExpresionUnaria{
+public class Not extends Expresion{
+    private Expresion expr;
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
     public Not(Expresion expr, int linea, int columna) {
-        super(expr, linea, columna);
+        super(linea, columna);
+        this.expr = expr;
     }
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
