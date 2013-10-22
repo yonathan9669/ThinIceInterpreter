@@ -58,7 +58,6 @@ nonterminal sent_do;
 nonterminal sent_for;
 //--------------------------------------------------
 nonterminal exp;
-nonterminal exp_binaria;
 nonterminal exp_booleana;
 nonterminal op_comparacion;
 nonterminal exp_aritmetica;
@@ -110,6 +109,9 @@ sent ::=			sent_decl:sd PUNT_C
 				{:
 				:}
 				|	sent_for:sf
+				{:
+				:}
+				|	ERROR
 				{:
 				:};
 
@@ -165,18 +167,10 @@ sent_for ::=		FOR PAR_I sent_asig:sai PUNT_C sent_asig:sap PUNT_C exp:e PAR_D LL
 				:};
 
 
-exp ::= 			exp_binaria:ebi
+exp ::= 			exp_booleana:ebi AND exp_booleana:ebo
 				{:
 				:}
-				|	ERROR
-				{:
-				:};
-
-
-exp_binaria ::=		exp_binaria:ebi AND exp_booleana:ebo
-				{:
-				:}
-				|	exp_binaria:ebi OR exp_booleana:ebo
+				|	exp_booleana:ebi OR exp_booleana:ebo
 				{:
 				:}
 				|	NOT exp:e

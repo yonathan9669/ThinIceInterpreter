@@ -1,6 +1,7 @@
 package thinice.TS;
 
 public abstract class Simbolo {
+
     //---------------------------Static Constants-------------------------------
     // <editor-fold desc="Static Constants">
     //---------------------------------------
@@ -15,6 +16,9 @@ public abstract class Simbolo {
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
+    public Simbolo() {
+        
+    }
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Getters---------------------------------------- 

@@ -5,7 +5,7 @@ import thinice.TS.SimboloAbstracto;
 import thinice.util.Utilidades;
 
 public abstract class NodoArbol {
-    //---------------------------Protected Attributes-----------------------------
+    //---------------------------Protected Attributes---------------------------
     // <editor-fold desc="Private Attributes">
     protected int linea;
     protected int columna;
@@ -77,8 +77,8 @@ public abstract class NodoArbol {
     }
     //---------------------------------------
     //  </editor-fold>
-    //---------------------------Protected Methods-------------------------------- 
-    // <editor-fold defaultstate="collapsed" desc="Private Methods">
+    //---------------------------Protected Methods------------------------------ 
+    // <editor-fold defaultstate="collapsed" desc="Protected Methods">
     protected void dump_SimboloAbstracto(PrintStream out, int n, SimboloAbstracto sym) {
         out.print(Utilidades.pad(n));
         out.println(sym.getTexto());

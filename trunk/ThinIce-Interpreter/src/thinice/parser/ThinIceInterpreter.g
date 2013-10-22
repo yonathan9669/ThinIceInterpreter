@@ -26,10 +26,8 @@ sent_do ->			DO lista_sent WHILE PAR_I exp PAR_D
 //--------------------------------------
 sent_for ->			FOR PAR_I sent_asig PUNT_C sent_asig PUNT_C exp PAR_D LLA_I lista_sent LLA_D
 //------------------------------------------------------------------------------------------------------------------
-exp -> 				exp_binaria
-//--------------------------------------
-exp_binaria -> 		exp_binaria AND exp_booleana
-				|	exp_binaria OR exp_booleana
+exp -> 				exp_booleana AND exp_booleana
+				|	exp_booleana OR exp_booleana
 				|	NOT exp
 				|	exp_booleana
 //--------------------------------------
