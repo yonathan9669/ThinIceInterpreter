@@ -11,9 +11,9 @@ public abstract class TablaAbstracta {
     private static int TAM_MAX_SYMB=1024;
     //---------------------------------------
     //  </editor-fold>
-    //---------------------------Package Attributes------------------------------
-    // <editor-fold desc="Public Attributes">
-    HashMap<String, SimboloAbstracto> tabla;
+    //---------------------------Protected Attributes---------------------------
+    // <editor-fold desc="Protected Attributes">
+    protected HashMap<String, SimboloAbstracto> tabla;
     //  </editor-fold>
     //---------------------------Public Attributes------------------------------
     // <editor-fold desc="Public Attributes">

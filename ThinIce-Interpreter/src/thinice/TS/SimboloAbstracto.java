@@ -21,8 +21,8 @@ public abstract class SimboloAbstracto {
     // <editor-fold desc="Public Attributes">
     //---------------------------------------
     //  </editor-fold>
-    //---------------------------Protected Attributes-----------------------------
-    // <editor-fold desc="Private Attributes">
+    //---------------------------Protected Attributes---------------------------
+    // <editor-fold desc="Protected Attributes">
     protected int indice;
     protected String texto;
     protected int linea;
