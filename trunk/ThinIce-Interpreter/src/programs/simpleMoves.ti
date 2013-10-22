@@ -1,7 +1,7 @@
 programa(){
 	entero x;
 	booleano y := true;
-	/* probando los comentarios */
+
 	x := 10;
 	
 	y := (x + 2 >= 1) Y (x * 2 <= 7);
@@ -12,9 +12,6 @@ programa(){
 	avanzar(x - 3);
 	mirarAbajo();
 
-	/* probando los errores */
-	9gG04_31pO
-	
 	y := x < 2;
 	avanzar(4);
 	mirarIzquierda();
@@ -22,4 +19,17 @@ programa(){
 	x := x - 8;
 	avanzar(x + 1);
 	mirarDerecha();
+
+	// prueba de errores
+	/* probando / los * comentarios *  ****/
+	
+
+	v_1 := 11-1 - 3;
+	v.2 := 5.5 - v2v;
+	v3-3 := 4v - 1v4;
+	v4  := v_1v2;
+	_v5 := 1a2b3b__BB33..24v;
+	1var_10 := var20-1 - x - 5;
+	
+	
 }

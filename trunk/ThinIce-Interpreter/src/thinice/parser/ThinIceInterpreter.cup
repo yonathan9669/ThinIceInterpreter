@@ -12,26 +12,26 @@ import thinice.TS.*;
 
 action code {: 
 
-    int getLinea() {
-        return ((ThinIceLexer)parser.getScanner()).getLinea();
-    }
+	int getLinea() {
+		return ((ThinIceLexer)parser.getScanner()).getLinea();
+	}
 
-    int getColumna(){
-        return ((ThinIceLexer)parser.getScanner()).getColumna();
-    }
+	int getColumna(){
+		return ((ThinIceLexer)parser.getScanner()).getColumna();
+	}
 
-    /*
-    SimboloAbstracto getNombreArchivo() {
-        return ((ThinIceLexer)parser.getScanner()).getNombreArchivo();
-    }
-    */
+	/*
+	SimboloAbstracto getNombreArchivo() {
+		return ((ThinIceLexer)parser.getScanner()).getNombreArchivo();
+	}
+	*/
 :}
 
 //---------------------------Terminal Definition--------------------------------
 
 terminal PROGRAM;
-terminal PAR_I, PAR_D, LLA_I, LLA_D, COR_I, COR_D, PUNT_C;
-terminal INT, BOOL;
+terminal PAR_I, PAR_D, LLA_I, LLA_D, COR_I, COR_D, PUNT_C, COMA;
+terminal INT, BOOLEAN;
 terminal IF, ELSE, DO, WHILE, FOR;
 terminal ASIG;
 terminal SUMA, RESTA, MULTI, DIV, MOD;
@@ -81,4 +81,199 @@ precedence left MULTI, DIV, MOD;
 
 //---------------------------Grammar Definition---------------------------------
 
-programa ::=    PROGRAM PAR_I PAR_D LLA_I lista_sent LLA_D;
+programa ::=		PROGRAM PAR_I PAR_D LLA_I lista_sent:ls LLA_D
+				{:
+				:};
+
+
+lista_sent ::=		lista_sent:ls sent:s
+				{:
+				:}
+				|	sent:s
+				{:
+				:};
+
+
+sent ::=			sent_decl:sd PUNT_C
+				{:
+				:}
+				|	sent_asig:sa PUNT_C
+				{:
+				:}
+				|	func_call:fc PUNT_C
+				{:
+				:}
+				|	sent_if:si
+				{:
+				:}
+				|	sent_do:sdw
+				{:
+				:}
+				|	sent_for:sf
+				{:
+				:};
+
+
+sent_decl ::=		tipo_var:tv variable:v
+				{:
+				:}
+				|	tipo_var:tv sent_asig:sa
+				{:
+				:};
+tipo_var ::=		INT
+				{:
+				:}
+				|	BOOLEAN
+				{:
+				:};
+
+
+sent_asig ::=		variable:v ASIG exp:e
+				{:
+				:};
+
+
+func_call ::=		ID PAR_I lista_parm:lp PAR_D
+				{:
+				:};
+lista_parm ::=		lista_parm:lp COMA exp:e
+				{:
+				:}
+				|	exp:e
+				{:
+				:};
+
+
+sent_if ::=			IF PAR_I exp:e PAR_D LLA_I lista_sent:ls LLA_D else:el
+				{:
+				:};
+else ::=			ELSE LLA_I lista_sent:ls LLA_D
+				{:
+				:}
+				|	EMPTY
+				{:
+				:};
+
+
+sent_do ::=			DO lista_sent:ls WHILE PAR_I exp:e PAR_D
+				{:
+				:};
+
+
+sent_for ::=		FOR PAR_I sent_asig:sai PUNT_C sent_asig:sap PUNT_C exp:e PAR_D LLA_I lista_sent:ls LLA_D
+				{:
+				:};
+
+
+exp ::= 			exp_binaria:ebi
+				{:
+				:}
+				|	ERROR
+				{:
+				:};
+
+
+exp_binaria ::=		exp_binaria:ebi AND exp_booleana:ebo
+				{:
+				:}
+				|	exp_binaria:ebi OR exp_booleana:ebo
+				{:
+				:}
+				|	NOT exp:e
+				{:
+				:}
+				|	exp_booleana:ebo
+				{:
+				:};
+
+
+exp_booleana ::=	exp_booleana:ebo op_comparacion:oc exp_aritmetica:ear
+				{:
+				:}
+				|	exp_aritmetica:ear
+				{:
+				:};
+op_comparacion ::=	MENOR
+				{:
+				:}
+				|	MENOR_IGUAL
+				{:
+				:}
+				|	MAYOR_IGUAL
+				{:
+				:}
+				|	MAYOR
+				{:
+				:}
+				|	IGUAL
+				{:
+				:}
+				|	DIFERENTE
+				{:
+				:};
+
+
+exp_aritmetica ::=	exp_aritmetica:ear op_aritmetica:oa exp_factor:efa
+				{:
+				:}
+				|	exp_factor:efa
+				{:
+				:};
+op_aritmetica ::=	SUMA
+				{:
+				:}
+				|	RESTA
+				{:
+				:};
+
+
+exp_factor ::=		exp_factor:efa op_factor:of termino:t
+				{:
+				:}
+				|	termino:t
+				{:
+				:};
+op_factor ::=		MULTI
+				{:
+				:}
+				|	DIV
+				{:
+				:}
+				|	MOD
+				{:
+				:};
+
+
+termino ::=			PAR_I exp:e PAR_D
+				{:
+				:}
+				|	func_call:fc
+				{:
+				:}
+				|	literal:li
+				{:
+				:}
+				|	variable:v
+				{:
+				:};
+
+
+literal ::=			ENTERO
+				{:
+				:}
+				|	BOOLEANO
+				{:
+				:};
+
+
+variable ::=		ID
+				{:
+				:}
+				|	vector:vec
+				{:
+				:};
+
+
+vector ::=			ID COR_I exp:e COR_D
+				{:
+				:};
