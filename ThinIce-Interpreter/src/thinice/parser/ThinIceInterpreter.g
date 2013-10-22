@@ -39,7 +39,7 @@ op_comparacion ->	MENOR	|	MENOR_IGUAL	|	MAYOR_IGUAL	|	MAYOR	|	IGUAL	|	DIFERENTE
 //--------------------------------------
 exp_aritmetica ->	exp_aritmetica op_aritmetica exp_factor
 				|	exp_factor
-op_aritmetica		SUMA	|	RESTA
+op_aritmetica ->	SUMA	|	RESTA
 //--------------------------------------
 exp_factor ->		exp_factor op_factor termino
 				|	termino

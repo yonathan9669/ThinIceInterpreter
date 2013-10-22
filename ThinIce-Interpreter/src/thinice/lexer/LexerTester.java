@@ -1,17 +1,14 @@
 package thinice.lexer;
 
-import JFlex.sym;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java_cup.runtime.Symbol;
+import thinice.parser.ThinIceTokenDef;
 
 public class LexerTester {
-    
-    
+
     public static void main(String[] args) {
         FileInputStream input = null;
 
@@ -27,8 +24,8 @@ public class LexerTester {
             ThinIceLexer lexer = new ThinIceLexer(input);
 
             Symbol symbol;
-            while ((symbol = lexer.next_token()).sym != sym.EOF) {
-                System.out.println(symbol.value);
+            while ((symbol = lexer.next_token()).sym != ThinIceTokenDef.EOF) {
+                System.out.println(symbol.value.toString());
             }
         } catch (FileNotFoundException ex) {
             System.out.println("No se pudo abrir el archivo de entrada");
