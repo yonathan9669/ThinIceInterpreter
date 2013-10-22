@@ -1,0 +1,35 @@
+programa(){
+	entero x;
+	booleano y := true;
+
+	x := 3;
+	
+	y := (x + 2 >= 1) Y (x * 2 <= 7);
+	avanzar(x);
+	mirarArriba();
+	
+	y := !y;
+	avanzar(x - 3);
+	mirarAbajo();
+
+	y := x < 2;
+	avanzar(4);
+	mirarIzquierda();
+	
+	x := x / 4;
+	avanzar(x + 1);
+	mirarDerecha();
+
+	// prueba de errores
+	/* probando / los * comentarios *  ****/
+	
+
+	v_1 := 11-1 - 3;
+	v.2 := 5.5 - v2v;
+	v3-3 := 4v - 1v4;
+	v4  := v_1v2;
+	_v5 := 1a2b3b__BB33..24v;
+	1var_10 := var20-1 - x - 5;
+	
+	
+}
