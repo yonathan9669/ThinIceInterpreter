@@ -29,11 +29,10 @@ public class RepitaPara extends Sentencia{
     public void dump(PrintStream out, int n) {
         dumpLineaColumna(out, n);
         out.println("_repita-para");
-        out.println(Utilidades.pad(n+2) + "_sentencias");
-        //n+???
         asign1.dump(out, n+2);
         asign2.dump(out, n+2);
         condicion.dump(out, n+2);
+        out.println(Utilidades.pad(n+2) + "_sentencias");
         sentencias.dump(out, n+4);
     }
     //  </editor-fold>

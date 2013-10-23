@@ -22,8 +22,8 @@ public class Asignacion extends Sentencia{
     public void dump(PrintStream out, int n) {
         dumpLineaColumna(out, n);
         out.println("_asignacion");
-        id.dump(out, n + 2);
-        expr.dump(out, n + 2);
+        id.dump(out, n+2);
+        expr.dump(out, n+2);
     }
     //  </editor-fold>
     
