@@ -317,7 +317,11 @@ termino ::=			PAR_I exp:e PAR_D
 
 literal ::=			ENTERO:i
 				{:
-					RESULT = new Entero(i, i.getLinea(), i.getColumna());
+					RESULT = new Entero(i, i.getLinea(), i.getColumna(), "positivo");
+				:}
+                |	RESTA ENTERO:i
+				{:
+					RESULT = new Entero(i, i.getLinea(), i.getColumna(), "negativo");
 				:}
 				|	BOOLEANO:b
 				{:
