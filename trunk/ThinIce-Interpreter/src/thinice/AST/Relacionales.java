@@ -23,7 +23,7 @@ public class Relacionales extends ExpresionBinaria{
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
-    public Relacionales(Expresion expr1, Expresion expr2, int linea, int columna, int TIPO) {
+    public Relacionales(Expresion expr1, Expresion expr2, int TIPO, int linea, int columna) {
         super(expr1, expr2, linea, columna);
         this.type = TIPO;
     }
