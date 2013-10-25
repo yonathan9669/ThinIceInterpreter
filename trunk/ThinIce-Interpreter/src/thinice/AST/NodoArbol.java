@@ -9,7 +9,7 @@ public abstract class NodoArbol {
     // <editor-fold desc="Private Attributes">
     protected int linea;
     protected int columna;
-    protected Nodo padre;
+    protected NodoArbol padre;
     
     //---------------------------------------
     //  </editor-fold>
@@ -42,7 +42,7 @@ public abstract class NodoArbol {
     }
     
     //---------------------------------------
-    public NodoArbol(int linea, int columna, Nodo padre) {
+    public NodoArbol(int linea, int columna, NodoArbol padre) {
         this.linea = linea;
         this.columna = columna;
         this.padre = padre;
@@ -63,7 +63,7 @@ public abstract class NodoArbol {
     }
 
     //---------------------------------------
-    public Nodo getPadre() {
+    public NodoArbol getPadre() {
         return padre;
     }
 
@@ -71,7 +71,7 @@ public abstract class NodoArbol {
     //  </editor-fold>
     //---------------------------Setters---------------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Setters">
-    public void setPadre(Nodo padre) {
+    public void setPadre(NodoArbol padre) {
         this.padre = padre;
         this.profundidad = padre.profundidad + 1;
     }

@@ -10,15 +10,15 @@ programa(){
 	
 	y := !y;
 	avanzar(x - 3);
-	mirarAbajo();
+	mirarAbajo(6);
 
 	y := x < 2;
 	avanzar(4);
-	mirarIzquierda();
+	mirarIzquierda(3);
 	
 	x := x / 4;
 	avanzar(x + 1);
-	mirarDerecha();
+	mirarDerecha(2);
 
 	// prueba de errores
 	/* probando / los * comentarios *  ****/
