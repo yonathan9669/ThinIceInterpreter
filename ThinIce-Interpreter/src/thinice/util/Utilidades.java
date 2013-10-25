@@ -46,7 +46,7 @@ public class Utilidades {
             case ThinIceTokenDef.EOF:
                 return "FIN_ARCHIVO";
             case ThinIceTokenDef.BOOLEAN:
-                return "BOOLEAN";
+                return "BOOL";
             case ThinIceTokenDef.ASIG:
                 return ":=";
             case ThinIceTokenDef.PAR_I:
@@ -116,6 +116,7 @@ public class Utilidades {
         str.print("#" + sym.getLinea() + ":" + sym.getColumna() + ": " + tokenEnTexto(s));
 
         switch (s.sym) {
+            case ThinIceTokenDef.BOOLEANO:
             case ThinIceTokenDef.ENTERO:
             case ThinIceTokenDef.ID:
                 str.print(" = " + sym.getTexto());

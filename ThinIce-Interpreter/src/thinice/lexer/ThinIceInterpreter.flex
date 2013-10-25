@@ -22,7 +22,7 @@ import thinice.TS.*;
 %eofval}
 
 %{
-	//private SimboloAbstracto nombreArchivo;
+	private SimboloAbstracto nombreArchivo;
 	
 	public int getLinea(){
 		return yyline+1;
@@ -40,7 +40,6 @@ import thinice.TS.*;
 		return new Symbol(type, yyline + 1, yycolumn + 1, value);
 	}
 
-	/*
 	public void setNombreArchivo(String nombre) {
 		nombreArchivo = TablaAbstracta.texTabla.agregarSimbolo(nombre, getLinea(), getColumna());
 	}
@@ -48,7 +47,6 @@ import thinice.TS.*;
 	public SimboloAbstracto getNombreArchivo() {
 		return nombreArchivo;
 	}
-	*/
 %}
 
 digito					=	[0-9]
