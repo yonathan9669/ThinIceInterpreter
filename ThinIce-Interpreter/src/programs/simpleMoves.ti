@@ -16,11 +16,11 @@ programa(){
 
 	y := x < 2;
 	avanzar(4);
-	mirarIzquierda(3);
+	mirarIzquierda(6);
 	
 	x := x / 4;
 	avanzar(x + 1);
-	mirarDerecha(2);
+	mirarDerecha(6);
 
 	// prueba de errores
 	/* probando / los * comentarios *  ****/

@@ -83,11 +83,11 @@ NOID					=	{NUMERO}(({letra}|{conectores}){digito}*)+
 booleano			{ return symbol(BOOLEAN,		new SimboloTexto(yytext(), getLinea(), getColumna())); }
 entero				{ return symbol(INT,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
 
-si					{ return symbol(IF,				new SimboloTexto(yytext(), getLinea(), getColumna())); }
-sino				{ return symbol(ELSE,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-repita				{ return symbol(DO,				new SimboloTexto(yytext(), getLinea(), getColumna())); }
-hasta				{ return symbol(WHILE,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-para				{ return symbol(FOR,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
+if					{ return symbol(IF,				new SimboloTexto(yytext(), getLinea(), getColumna())); }
+else				{ return symbol(ELSE,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
+do					{ return symbol(DO,				new SimboloTexto(yytext(), getLinea(), getColumna())); }
+while				{ return symbol(WHILE,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
+for					{ return symbol(FOR,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
 
 "("					{ return symbol(PAR_I,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
 ")"					{ return symbol(PAR_D,			new SimboloTexto(yytext(), getLinea(), getColumna())); }

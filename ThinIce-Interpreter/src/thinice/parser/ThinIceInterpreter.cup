@@ -136,7 +136,7 @@ sent ::=			sent_decl:sd PUNT_C
 				{:
 					RESULT = si;
 				:}
-				|	sent_do:sdw
+				|	sent_do:sdw PUNT_C
 				{:
 					RESULT = sdw;
 				:}

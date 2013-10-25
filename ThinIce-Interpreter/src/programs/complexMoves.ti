@@ -1,0 +1,37 @@
+programa(){
+	entero x := 1;
+
+	if(x = 1){
+		entero y := x + 2;
+		
+		if(y <= 3 Y y > 0){
+			//Prueba de Error Sintactico (Asignacion no Valida)
+			//y := avanzar(5 + x);
+			//y := -1;
+			x := 36;
+		}
+		else{
+			avanzar((y * x / 4 + 1 ), true);
+		}
+	}
+
+	do
+		//Prueba de Error Semantico (Doble Declaracion)
+		booleano x := true;
+
+		//Prueba de Error Lexico (Id no valido)
+		//entero 1b := 2;
+
+		//Prueba de Error Semantico (AMBITO)
+		y := 43;
+	while(false <> true);
+
+	for(x := 0 ; x := x + 1 ; x < 10){
+		avanzar(x+2);
+		if(x mod 2 = 0){
+			mirarArriba();
+		}else{
+			mirarAbajo();
+		}
+	}
+}
