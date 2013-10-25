@@ -1,13 +1,14 @@
 package thinice.AST;
 
 import java.io.PrintStream;
+import thinice.TS.SimboloAbstracto;
 import thinice.util.Utilidades;
 
 public class TipoBool extends TipoVariable{
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
-    public TipoBool(TipoVariable tipo, int linea, int columna) {
-        super(linea, columna);        
+    public TipoBool(SimboloAbstracto simbolo) {
+        super(simbolo);
     }
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 

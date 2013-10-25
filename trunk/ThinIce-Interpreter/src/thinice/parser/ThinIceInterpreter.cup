@@ -12,6 +12,8 @@ import thinice.TS.*;
 
 action code {: 
 
+	boolean declaracion;
+
 	int getLinea() {
 		return ((ThinIceLexer)parser.getScanner()).getLinea();
 	}
@@ -80,69 +82,90 @@ precedence left MULTI, DIV, MOD;
 
 //---------------------------Grammar Definition---------------------------------
 
-programa ::=		PROGRAM PAR_I PAR_D LLA_I lista_sent:ls LLA_D
+programa ::=		PROGRAM:p PAR_I PAR_D LLA_I lista_sent:ls LLA_D
 				{:
+					RESULT = new Programa(ls, p.getLinea(), p.getColumna());
 				:};
 
 
 lista_sent ::=		lista_sent:ls sent:s
 				{:
+					RESULT.agregarElemento(s);
 				:}
 				|	sent:s
 				{:
+					RESULT = new ListaSentencia(s.getLinea(), s.getColumna);
+					RESULT.agregarElemento(s);
+					
 				:};
 
 
 sent ::=			sent_decl:sd PUNT_C
 				{:
+					RESULT = sd;
 				:}
 				|	sent_asig:sa PUNT_C
 				{:
+					RESULT = sa;
 				:}
 				|	func_call:fc PUNT_C
 				{:
+					RESULT = fc;
 				:}
 				|	sent_if:si
 				{:
+					RESULT = si;
 				:}
 				|	sent_do:sdw
 				{:
+					RESULT = sdw;
 				:}
 				|	sent_for:sf
 				{:
+					RESULT = sf;
 				:}
-				|	ERROR
+				|	ERROR:er
 				{:
+					RESULT = new Error(er, er.getLinea(), er.getColumna());
 				:};
 
 
 sent_decl ::=		tipo_var:tv variable:v
 				{:
+					RESULT = new DeclSimple(tv, v, getLinea(), getColumna());
 				:}
 				|	tipo_var:tv sent_asig:sa
 				{:
+					RESULT = new DeclCompleja(tv, sa, getLinea(), getColumna());
 				:};
-tipo_var ::=		INT
+tipo_var ::=		INT:i
 				{:
+					RESULT = new TipoEntero(i);
 				:}
-				|	BOOLEAN
+				|	BOOLEAN:b
 				{:
+					RESULT = new TipoBool(b);
 				:};
 
 
-sent_asig ::=		variable:v ASIG exp:e
+sent_asig ::=		variable:v ASIG:a exp:e
 				{:
+					RESULT = new Asignacion(v, e, a.getLinea(), a.getColumna());
 				:};
 
 
-func_call ::=		ID PAR_I lista_parm:lp PAR_D
+func_call ::=		ID:id PAR_I:f lista_parm:lp PAR_D
 				{:
+					RESULT = new LlamadaFuncion(id, lp, id.getLinea(), id.getColumna());
 				:};
 lista_parm ::=		lista_parm:lp COMA exp:e
 				{:
+					RESULT.agregarElemento(e);
 				:}
 				|	exp:e
 				{:
+					RESULT = new ListaParametros();
+					RESULT.agregarElemento(e);
 				:};
 
 
@@ -270,4 +293,10 @@ variable ::=		ID
 
 vector ::=			ID COR_I exp:e COR_D
 				{:
+					if(declaracion){
+						declaracion = false;
+					}
+					else{
+
+					}
 				:};

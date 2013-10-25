@@ -15,8 +15,8 @@ public abstract class TipoVariable extends NodoArbol{
     }
     
     //---------------------------------------
-    public TipoVariable(int linea, int columna, SimboloAbstracto tipo_var) {
-        super(linea, columna);
+    public TipoVariable(SimboloAbstracto tipo_var) {
+        super(tipo_var.getLinea(), tipo_var.getColumna());
         this.tipo_var = tipo_var;
     }
     //  </editor-fold>
