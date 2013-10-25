@@ -78,53 +78,53 @@ NOID					=	{NUMERO}(({letra}|{conectores}){digito}*)+
 
 <YYINITIAL>{
 
-^programa			{ return new Symbol(PROGRAM,        new SimboloTexto(yytext(), getLinea(), getColumna())); }
-";"					{ return new Symbol(PUNT_C,         new SimboloTexto(yytext(), getLinea(), getColumna())); }
-","					{ return new Symbol(COMA,           new SimboloTexto(yytext(), getLinea(), getColumna())); }
+^programa			{ return symbol(PROGRAM,        new SimboloTexto(yytext(), getLinea(), getColumna())); }
+";"					{ return symbol(PUNT_C,         new SimboloTexto(yytext(), getLinea(), getColumna())); }
+","					{ return symbol(COMA,           new SimboloTexto(yytext(), getLinea(), getColumna())); }
 
-booleano			{ return new Symbol(BOOLEAN,        new SimboloTexto(yytext(), getLinea(), getColumna())); }
-entero				{ return new Symbol(INT,            new SimboloTexto(yytext(), getLinea(), getColumna())); }
+booleano			{ return symbol(BOOLEAN,        new SimboloTexto(yytext(), getLinea(), getColumna())); }
+entero				{ return symbol(INT,            new SimboloTexto(yytext(), getLinea(), getColumna())); }
 
-si					{ return new Symbol(IF,             new SimboloTexto(yytext(), getLinea(), getColumna())); }
-sino				{ return new Symbol(ELSE,           new SimboloTexto(yytext(), getLinea(), getColumna())); }
-repita				{ return new Symbol(DO,             new SimboloTexto(yytext(), getLinea(), getColumna())); }
-hasta				{ return new Symbol(WHILE,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
-para				{ return new Symbol(FOR,            new SimboloTexto(yytext(), getLinea(), getColumna())); }
+si					{ return symbol(IF,             new SimboloTexto(yytext(), getLinea(), getColumna())); }
+sino				{ return symbol(ELSE,           new SimboloTexto(yytext(), getLinea(), getColumna())); }
+repita				{ return symbol(DO,             new SimboloTexto(yytext(), getLinea(), getColumna())); }
+hasta				{ return symbol(WHILE,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
+para				{ return symbol(FOR,            new SimboloTexto(yytext(), getLinea(), getColumna())); }
 
-"("					{ return new Symbol(PAR_I,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
-")"					{ return new Symbol(PAR_D,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"{"					{ return new Symbol(LLA_I,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"}"					{ return new Symbol(LLA_D,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"["					{ return new Symbol(COR_I,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"]"					{ return new Symbol(COR_D,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"("					{ return symbol(PAR_I,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
+")"					{ return symbol(PAR_D,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"{"					{ return symbol(LLA_I,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"}"					{ return symbol(LLA_D,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"["					{ return symbol(COR_I,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"]"					{ return symbol(COR_D,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
 
-":="				{ return new Symbol(ASIG,           new SimboloTexto(yytext(), getLinea(), getColumna())); }
+":="				{ return symbol(ASIG,           new SimboloTexto(yytext(), getLinea(), getColumna())); }
 
-"+"					{ return new Symbol(SUMA,           new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"-"					{ return new Symbol(RESTA,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"*"					{ return new Symbol(MULTI,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"/"					{ return new Symbol(DIV,            new SimboloTexto(yytext(), getLinea(), getColumna())); }
-mod					{ return new Symbol(MOD,            new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"+"					{ return symbol(SUMA,           new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"-"					{ return symbol(RESTA,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"*"					{ return symbol(MULTI,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"/"					{ return symbol(DIV,            new SimboloTexto(yytext(), getLinea(), getColumna())); }
+mod					{ return symbol(MOD,            new SimboloTexto(yytext(), getLinea(), getColumna())); }
 
-Y					{ return new Symbol(AND,            new SimboloTexto(yytext(), getLinea(), getColumna())); }
-O					{ return new Symbol(OR,             new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"!"					{ return new Symbol(NOT,            new SimboloTexto(yytext(), getLinea(), getColumna())); }
+Y					{ return symbol(AND,            new SimboloTexto(yytext(), getLinea(), getColumna())); }
+O					{ return symbol(OR,             new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"!"					{ return symbol(NOT,            new SimboloTexto(yytext(), getLinea(), getColumna())); }
 
-"<"					{ return new Symbol(MENOR,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"<="				{ return new Symbol(MENOR_IGUAL,    new SimboloTexto(yytext(), getLinea(), getColumna())); }
-">"					{ return new Symbol(MAYOR,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
-">="				{ return new Symbol(MAYOR_IGUAL,    new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"="					{ return new Symbol(IGUAL,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"<>"				{ return new Symbol(DIFERENTE,      new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"<"					{ return symbol(MENOR,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"<="				{ return symbol(MENOR_IGUAL,    new SimboloTexto(yytext(), getLinea(), getColumna())); }
+">"					{ return symbol(MAYOR,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
+">="				{ return symbol(MAYOR_IGUAL,    new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"="					{ return symbol(IGUAL,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"<>"				{ return symbol(DIFERENTE,      new SimboloTexto(yytext(), getLinea(), getColumna())); }
 
-{NOID}				{ return new Symbol(ERROR,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
+{NOID}				{ return symbol(ERROR,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
 
-{BOOL}				{ return new Symbol(BOOLEANO,       TablaAbstracta.boolTabla.agregarSimbolo(yytext(), getLinea(), getColumna())); }
-{NUMERO}			{ return new Symbol(ENTERO,         TablaAbstracta.intTabla.agregarSimbolo(yytext(), getLinea(), getColumna())); }
-{IDENTIFICADOR}     { return new Symbol(ID,             TablaAbstracta.idTabla.agregarSimbolo(yytext(), getLinea(), getColumna())); }
+{BOOL}				{ return symbol(BOOLEANO,       TablaAbstracta.boolTabla.agregarSimbolo(yytext(), getLinea(), getColumna())); }
+{NUMERO}			{ return symbol(ENTERO,         TablaAbstracta.intTabla.agregarSimbolo(yytext(), getLinea(), getColumna())); }
+{IDENTIFICADOR}     { return symbol(ID,             TablaAbstracta.idTabla.agregarSimbolo(yytext(), getLinea(), getColumna())); }
 
 {BLANCO}			{}
 {COMENTARIO}		{}
-.					{ return new Symbol(ERROR,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
+.					{ return symbol(ERROR,          new SimboloTexto(yytext(), getLinea(), getColumna())); }
 
 }
