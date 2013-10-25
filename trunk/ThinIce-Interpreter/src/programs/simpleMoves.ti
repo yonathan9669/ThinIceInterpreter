@@ -8,6 +8,8 @@ programa(){
 	avanzar(x);
 	mirarArriba();
 	
+    int vec[4];
+
 	y := !y;
 	avanzar(x - 3);
 	mirarAbajo(6);
