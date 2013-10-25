@@ -4,16 +4,11 @@ import java.io.PrintStream;
 import thinice.TS.SimboloAbstracto;
 import thinice.util.Utilidades;
 
-public class Booleano extends Expresion{
-    //---------------------------Protected Attributes-----------------------------
-    // <editor-fold desc="Private Attributes">
-    protected SimboloAbstracto token;
-    //  </editor-fold>
+public class Booleano extends Constante{
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
     public Booleano(SimboloAbstracto token, int linea, int columna) {
-        super(linea, columna);
-        this.token = token;
+        super(linea, columna, token);
     }
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 

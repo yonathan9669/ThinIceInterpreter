@@ -31,46 +31,43 @@ action code {:
 
 //---------------------------Terminal Definition--------------------------------
 
-terminal PROGRAM;
-terminal PAR_I, PAR_D, LLA_I, LLA_D, COR_I, COR_D, PUNT_C, COMA;
-terminal INT, BOOLEAN;
-terminal IF, ELSE, DO, WHILE, FOR;
-terminal ASIG;
-terminal SUMA, RESTA, MULTI, DIV, MOD;
-terminal AND, OR, NOT;
-terminal MENOR, MENOR_IGUAL, MAYOR, MAYOR_IGUAL, IGUAL, DIFERENTE;
-terminal BOOLEANO, ENTERO;
-terminal ID;
-terminal EMPTY, ERROR;
+terminal SimboloAbstracto PROGRAM;
+terminal SimboloAbstracto PAR_I, PAR_D, LLA_I, LLA_D, COR_I, COR_D, PUNT_C, COMA;
+terminal SimboloAbstracto INT, BOOLEAN;
+terminal SimboloAbstracto IF, ELSE, DO, WHILE, FOR;
+terminal SimboloAbstracto ASIG;
+terminal SimboloAbstracto SUMA, RESTA, MULTI, DIV, MOD;
+terminal SimboloAbstracto AND, OR, NOT;
+terminal SimboloAbstracto MENOR, MENOR_IGUAL, MAYOR, MAYOR_IGUAL, IGUAL, DIFERENTE;
+terminal SimboloAbstracto BOOLEANO, ENTERO;
+terminal SimboloAbstracto ID;
+terminal SimboloAbstracto ERROR;
 
 //---------------------------No Terminal Definition-----------------------------
 
-nonterminal programa;
-nonterminal lista_sent;
+nonterminal Programa programa;
+nonterminal ListaSentencia lista_sent;
 //--------------------------------------------------
-nonterminal sent;
-nonterminal sent_decl;
-nonterminal tipo_var;
-nonterminal sent_asig;
-nonterminal func_call;
-nonterminal lista_parm;
-nonterminal sent_if;
-nonterminal else;
-nonterminal sent_do;
-nonterminal sent_for;
+nonterminal Sentencia sent;
+nonterminal Declaracion sent_decl;
+nonterminal TipoVariable tipo_var;
+nonterminal Asignacion sent_asig;
+nonterminal LlamadaFuncion func_call;
+nonterminal ListaParametros lista_parm;
+nonterminal Condicional sent_if;
+nonterminal RepitaHasta sent_do;
+nonterminal RepitaPara sent_for;
 //--------------------------------------------------
-nonterminal exp;
-nonterminal exp_booleana;
-nonterminal op_comparacion;
-nonterminal exp_aritmetica;
-nonterminal op_aritmetica;
-nonterminal exp_factor;
-nonterminal op_factor;
-nonterminal termino;
+nonterminal Expresion exp;
+nonterminal Expresion exp_booleana;
+nonterminal Integer op_comparacion;
+nonterminal Expresion exp_aritmetica;
+nonterminal Expresion exp_factor;
+nonterminal Expresion termino;
 //--------------------------------------------------
-nonterminal literal;
-nonterminal variable;
-nonterminal vector;
+nonterminal Constante literal;
+nonterminal Variable variable;
+nonterminal PosVector vector;
 
 //---------------------------Precedence Definition------------------------------
 
@@ -94,7 +91,7 @@ lista_sent ::=		lista_sent:ls sent:s
 				:}
 				|	sent:s
 				{:
-					RESULT = new ListaSentencia(s.getLinea(), s.getColumna);
+					RESULT = new ListaSentencia();
 					RESULT.agregarElemento(s);
 					
 				:};
@@ -126,7 +123,7 @@ sent ::=			sent_decl:sd PUNT_C
 				:}
 				|	ERROR:er
 				{:
-					RESULT = new Error(er, er.getLinea(), er.getColumna());
+					RESULT = new SentError(er, getLinea(), getColumna());
 				:};
 
 
@@ -154,7 +151,7 @@ sent_asig ::=		variable:v ASIG:a exp:e
 				:};
 
 
-func_call ::=		ID:id PAR_I:f lista_parm:lp PAR_D
+func_call ::=		ID:id PAR_I lista_parm:lp PAR_D
 				{:
 					RESULT = new LlamadaFuncion(id, lp, id.getLinea(), id.getColumna());
 				:};
@@ -169,134 +166,147 @@ lista_parm ::=		lista_parm:lp COMA exp:e
 				:};
 
 
-sent_if ::=			IF PAR_I exp:e PAR_D LLA_I lista_sent:ls LLA_D else:el
+sent_if ::=			IF:i PAR_I exp:e PAR_D LLA_I lista_sent:ls LLA_D
 				{:
-				:};
-else ::=			ELSE LLA_I lista_sent:ls LLA_D
-				{:
+					RESULT = new Condicional(e, ls, null, i.getLinea(), i.getColumna());
 				:}
-				|	EMPTY
+				|	IF:i PAR_I exp:e PAR_D LLA_I lista_sent:lsi LLA_D ELSE LLA_I lista_sent:lse LLA_D
 				{:
+					RESULT = new Condicional(e, lsi, lse, i.getLinea(), i.getColumna());
 				:};
 
 
-sent_do ::=			DO lista_sent:ls WHILE PAR_I exp:e PAR_D
+sent_do ::=			DO:d lista_sent:ls WHILE PAR_I exp:e PAR_D
 				{:
+					RESULT = new RepitaHasta(e, ls, d.getLinea(), d.getColumna());
 				:};
 
 
-sent_for ::=		FOR PAR_I sent_asig:sai PUNT_C sent_asig:sap PUNT_C exp:e PAR_D LLA_I lista_sent:ls LLA_D
+sent_for ::=		FOR:f PAR_I sent_asig:sai PUNT_C sent_asig:sap PUNT_C exp:e PAR_D LLA_I lista_sent:ls LLA_D
 				{:
+					RESULT = new RepitaPara(sai, sap, e, ls, f.getLinea(), f.getColumna());
 				:};
 
 
-exp ::= 			exp_booleana:ebi AND exp_booleana:ebo
+exp ::= 			exp_booleana:ebi AND:a exp_booleana:ebo
 				{:
+					RESULT = new And(ebi, ebo, a.getLinea(), a.getColumna());
 				:}
-				|	exp_booleana:ebi OR exp_booleana:ebo
+				|	exp_booleana:ebi OR:o exp_booleana:ebo
 				{:
+					RESULT = new Or(ebi, ebo, o.getLinea(), o.getColumna());
 				:}
-				|	NOT exp:e
+				|	NOT:n exp:e
 				{:
+					RESULT = new Not(e, n.getLinea(), n.getColumna());
 				:}
 				|	exp_booleana:ebo
 				{:
+					RESULT = ebo;
 				:};
 
 
 exp_booleana ::=	exp_booleana:ebo op_comparacion:oc exp_aritmetica:ear
 				{:
+					RESULT = new Relacionales(ebo, ear, oc, getLinea(), getColumna());
 				:}
 				|	exp_aritmetica:ear
 				{:
+					RESULT = ear;
 				:};
 op_comparacion ::=	MENOR
 				{:
+					RESULT = Relacionales.MENOR;
 				:}
 				|	MENOR_IGUAL
 				{:
+					RESULT = Relacionales.MENOR_IGUAL;
 				:}
 				|	MAYOR_IGUAL
 				{:
+					RESULT = Relacionales.MAYOR_IGUAL;
 				:}
 				|	MAYOR
 				{:
+					RESULT = Relacionales.MAYOR;
 				:}
 				|	IGUAL
 				{:
+					RESULT = Relacionales.IGUAL;
 				:}
 				|	DIFERENTE
 				{:
+					RESULT = Relacionales.DIFERENTE;
 				:};
 
 
-exp_aritmetica ::=	exp_aritmetica:ear op_aritmetica:oa exp_factor:efa
+exp_aritmetica ::=	exp_aritmetica:ear SUMA:s exp_factor:efa
 				{:
+					RESULT = new Suma(ear, efa, s.getLinea(), s.getColumna());
+				:}
+				|	exp_aritmetica:ear RESTA:r exp_factor:efa
+				{:
+					RESULT = new Resta(ear, efa, r.getLinea(), r.getColumna());
 				:}
 				|	exp_factor:efa
 				{:
+					RESULT = efa;
 				:};
-op_aritmetica ::=	SUMA
+
+
+exp_factor ::=		exp_factor:efa MULTI:of termino:t
 				{:
+					RESULT = new Multiplicacion(efa, t, of.getLinea(), of.getColumna());
 				:}
-				|	RESTA
+				|	exp_factor:efa DIV:of termino:t
 				{:
-				:};
-
-
-exp_factor ::=		exp_factor:efa op_factor:of termino:t
+					RESULT = new Division(efa, t, of.getLinea(), of.getColumna());
+				:}
+				|	exp_factor:efa MOD:of termino:t
 				{:
+					RESULT = new Modulo(efa, t, of.getLinea(), of.getColumna());
 				:}
 				|	termino:t
 				{:
-				:};
-op_factor ::=		MULTI
-				{:
-				:}
-				|	DIV
-				{:
-				:}
-				|	MOD
-				{:
+					RESULT = t;
 				:};
 
 
 termino ::=			PAR_I exp:e PAR_D
 				{:
-				:}
-				|	func_call:fc
-				{:
+					RESULT = e;
 				:}
 				|	literal:li
 				{:
+					RESULT = li;
 				:}
 				|	variable:v
 				{:
+					RESULT = v;
 				:};
 
 
-literal ::=			ENTERO
+literal ::=			ENTERO:i
 				{:
+					RESULT = new Entero(i, i.getLinea(), i.getColumna());
 				:}
-				|	BOOLEANO
+				|	BOOLEANO:b
 				{:
+					RESULT = new Booleano(b, b.getLinea(), b.getColumna());
 				:};
 
 
-variable ::=		ID
+variable ::=		ID:id
 				{:
+					RESULT = new Variable(id, id.getLinea(), id.getColumna());
 				:}
 				|	vector:vec
 				{:
+					RESULT = vec;
 				:};
 
 
-vector ::=			ID COR_I exp:e COR_D
+vector ::=			ID:id COR_I exp:e COR_D
 				{:
-					if(declaracion){
-						declaracion = false;
-					}
-					else{
-
-					}
+					RESULT = new PosVector(id, e, id.getLinea(), id.getColumna());
 				:};

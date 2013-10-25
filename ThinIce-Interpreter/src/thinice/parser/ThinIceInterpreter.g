@@ -44,7 +44,6 @@ exp_factor ->		exp_factor op_factor termino
 op_factor ->		MULTI	|	DIV	|	MOD
 //--------------------------------------
 termino ->			PAR_I exp PAR_D
-				|	func_call
 				|	literal
 				|	variable
 //--------------------------------------
