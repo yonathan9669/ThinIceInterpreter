@@ -18,6 +18,7 @@ public abstract class TablaAbstracta {
     //---------------------------Public Attributes------------------------------
     // <editor-fold desc="Public Attributes">
     public static TablaEntero intTabla = new TablaEntero();
+    public static TablaBooleano boolTabla = new TablaBooleano();
     public static TablaId idTabla = new TablaId();
     public static TablaTexto texTabla = new TablaTexto();
     //  </editor-fold>
