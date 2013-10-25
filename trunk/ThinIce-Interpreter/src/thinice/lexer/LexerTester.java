@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java_cup.runtime.Symbol;
 import thinice.parser.ThinIceTokenDef;
+import thinice.util.Utilidades;
 
 public class LexerTester {
 
@@ -25,7 +26,7 @@ public class LexerTester {
 
             Symbol symbol;
             while ((symbol = lexer.next_token()).sym != ThinIceTokenDef.EOF) {
-                System.out.println(symbol.value.toString());
+                Utilidades.dumpToken(System.out, symbol);
             }
         } catch (FileNotFoundException ex) {
             System.out.println("No se pudo abrir el archivo de entrada");

@@ -22,13 +22,35 @@ action code {:
 		return ((ThinIceLexer)parser.getScanner()).getColumna();
 	}
 
-	/*
 	SimboloAbstracto getNombreArchivo() {
 		return ((ThinIceLexer)parser.getScanner()).getNombreArchivo();
 	}
-	*/
 :}
 
+parser code {:
+    int omerrs = 0;
+
+    public int getOmerrs(){
+        return omerrs;
+    }
+
+    public void syntax_error(Symbol cur_token) {
+        int lineno = action_obj.getLinea();
+        int column = action_obj.getColumna();
+	String filename = action_obj.getNombreArchivo().getTexto();
+        System.err.print(filename + ": " + lineno 
+		         + ":" + column + ": error de sintáxis cerca de ");
+        Utilidades.imprimirToken(cur_token);
+	omerrs++;
+	if (omerrs>50) {
+	   System.err.println("El análisis se ha detenido porque se encontraron muchos errores");
+	   System.exit(1);
+	}
+    }
+
+    public void unrecovered_syntax_error(Symbol cur_token) {
+    }
+:}
 //---------------------------Terminal Definition--------------------------------
 
 terminal SimboloAbstracto PROGRAM;
@@ -87,7 +109,8 @@ programa ::=		PROGRAM:p PAR_I PAR_D LLA_I lista_sent:ls LLA_D
 
 lista_sent ::=		lista_sent:ls sent:s
 				{:
-					RESULT.agregarElemento(s);
+					ls.agregarElemento(s);
+					RESULT = ls;
 				:}
 				|	sent:s
 				{:
@@ -157,7 +180,8 @@ func_call ::=		ID:id PAR_I lista_parm:lp PAR_D
 				:};
 lista_parm ::=		lista_parm:lp COMA exp:e
 				{:
-					RESULT.agregarElemento(e);
+					lp.agregarElemento(e);
+					RESULT = lp;
 				:}
 				|	exp:e
 				{:

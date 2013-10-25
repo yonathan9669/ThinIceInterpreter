@@ -3,7 +3,7 @@ package thinice.parser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
+import thinice.AST.Programa;
 import thinice.lexer.ThinIceLexer;
 
 public class ParserTester {
@@ -15,10 +15,9 @@ public class ParserTester {
             input = new FileInputStream(new File(args[0]));
             
             ThinIceLexer lexer = new ThinIceLexer(input);
-            //lexer.setNombreArchivo(args[0]);
+            lexer.setNombreArchivo(args[0]);
             ThinIceParser parser = new ThinIceParser(lexer);
             
-            /*
             Programa result = (Programa) (parser.parse().value);
            
             if (parser.omerrs > 0) {
@@ -27,7 +26,7 @@ public class ParserTester {
 	    }
             
             result.dump(System.out, 0);
-            */
+            
             System.out.println("El análisis ha finalizado correctamente");
         /*}catch (URISyntaxException ex) {
             System.out.println("Ha ocurrido un error de formato en la ruta del archivo");
