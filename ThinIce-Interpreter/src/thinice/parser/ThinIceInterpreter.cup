@@ -177,7 +177,12 @@ sent_asig ::=		variable:v ASIG:a exp:e
 func_call ::=		ID:id PAR_I lista_parm:lp PAR_D
 				{:
 					RESULT = new LlamadaFuncion(id, lp, id.getLinea(), id.getColumna());
+				:}
+                |   ID:id PAR_I PAR_D
+                {:
+					RESULT = new LlamadaFuncion(id, id.getLinea(), id.getColumna());
 				:};
+
 lista_parm ::=		lista_parm:lp COMA exp:e
 				{:
 					lp.agregarElemento(e);

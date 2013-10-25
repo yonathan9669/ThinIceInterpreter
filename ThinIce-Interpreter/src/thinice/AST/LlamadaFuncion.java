@@ -5,9 +5,13 @@ import thinice.TS.SimboloAbstracto;
 
 public class LlamadaFuncion extends Sentencia{
     //---------------------------Protected Attributes-----------------------------
-    // <editor-fold desc="Private Attributes">
+    // <editor-fold desc="Protected Attributes">
     protected SimboloAbstracto id;
     protected ListaParametros params;
+    //  </editor-fold>
+    //---------------------------Private Attributes-----------------------------
+    // <editor-fold desc="Private Attributes">
+    private boolean tieneParam;
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
@@ -15,8 +19,16 @@ public class LlamadaFuncion extends Sentencia{
         super(linea, columna);
         this.id = id;
         this.params = params;
+        tieneParam = true;
     }
     
+    //---------------------------------------
+    public LlamadaFuncion(SimboloAbstracto id, int linea, int columna) {
+        super(linea, columna);
+        this.id = id;
+        this.params = null;
+        tieneParam = false;
+    }
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
@@ -26,7 +38,8 @@ public class LlamadaFuncion extends Sentencia{
         dumpLineaColumna(out, n);
         out.println("_call");
         dump_SimboloAbstracto(out, n + 2, id);
-        params.dump(out, n + 2);
+        if(tieneParam)
+            params.dump(out, n + 2);
     }
     //  </editor-fold>
     
