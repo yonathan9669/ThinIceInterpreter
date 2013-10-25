@@ -1,14 +1,12 @@
 programa(){
-	entero x;
+    x := - 3 mod - 4 / -5 + -5;
+    
+    entero x;
 	booleano y := true;
-
-	x := 3;
 	
 	y := (x + 2 >= 1) Y (x * 2 <= 7);
 	avanzar(x);
 	mirarArriba();
-	
-    int vec[4];
 
 	y := !y;
 	avanzar(x - 3);
