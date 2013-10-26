@@ -178,8 +178,8 @@ func_call ::=		ID:id PAR_I lista_parm:lp PAR_D
 				{:
 					RESULT = new LlamadaFuncion(id, lp, id.getLinea(), id.getColumna());
 				:}
-                |   ID:id PAR_I PAR_D
-                {:
+				|   ID:id PAR_I PAR_D
+				{:
 					RESULT = new LlamadaFuncion(id, id.getLinea(), id.getColumna());
 				:};
 
@@ -319,7 +319,7 @@ literal ::=			ENTERO:i
 				{:
 					RESULT = new Entero(i, i.getLinea(), i.getColumna(), "positivo");
 				:}
-                |	RESTA ENTERO:i
+				|	RESTA ENTERO:i
 				{:
 					RESULT = new Entero(i, i.getLinea(), i.getColumna(), "negativo");
 				:}
@@ -341,5 +341,5 @@ variable ::=		ID:id
 
 vector ::=			ID:id COR_I exp:e COR_D
 				{:
-					RESULT = new PosVector(id, e, id.getLinea(), id.getColumna());
+					RESULT = new PosVector(TablaAbstracta.vecTabla.agregarSimbolo(id, id.getLinea(), id.getColumna()),e ,id.getLinea(), id.getColumna());
 				:};

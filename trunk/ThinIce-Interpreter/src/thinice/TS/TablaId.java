@@ -1,6 +1,6 @@
 package thinice.TS;
 
-public class TablaId extends TablaAbstracta{
+public class TablaId extends TablaAbstracta<String, SimboloAbstracto>{
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Abstract Methods">
     @Override

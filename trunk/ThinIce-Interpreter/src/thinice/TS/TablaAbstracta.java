@@ -2,9 +2,8 @@ package thinice.TS;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
-public abstract class TablaAbstracta {
+public abstract class TablaAbstracta<K, V> extends HashMap<K, V>{
     //---------------------------Private Attributes-----------------------------
     // <editor-fold desc="Private Attributes">
     private int idx;   
@@ -13,7 +12,7 @@ public abstract class TablaAbstracta {
     //  </editor-fold>
     //---------------------------Protected Attributes---------------------------
     // <editor-fold desc="Protected Attributes">
-    protected HashMap<String, SimboloAbstracto> tabla;
+    
     //  </editor-fold>
     //---------------------------Public Attributes------------------------------
     // <editor-fold desc="Public Attributes">
@@ -21,53 +20,55 @@ public abstract class TablaAbstracta {
     public static TablaBooleano boolTabla = new TablaBooleano();
     public static TablaId idTabla = new TablaId();
     public static TablaTexto texTabla = new TablaTexto();
+    public static TablaVector vecTabla = new TablaVector();
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
     public TablaAbstracta() {
-        tabla = new HashMap<String, SimboloAbstracto>();
+        super();
         idx = 0;
     }   
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Public Methods--------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Public Methods">
-    public SimboloAbstracto agregarSimbolo(String texto, int linea, int columna){
+    public SimboloAbstracto agregarSimbolo(K texto, int linea, int columna){
         return agregarSimbolo(texto, TAM_MAX_SYMB, linea, columna);
     }
     
     //---------------------------------------
-    public SimboloAbstracto agregarSimbolo(String texto, int tam, int linea, int columna){
-        SimboloAbstracto sym = null;
-        
-        texto = (texto.length() <= TAM_MAX_SYMB) ? texto : texto.substring(0, TAM_MAX_SYMB);
-        
-        if(!tabla.containsKey(texto)){
-            sym = getNuevoSimbolo(texto, idx++, linea, columna);
-            tabla.put(texto, sym);
-        }else{
-            sym = (SimboloAbstracto) tabla.get(texto).clone();
-            sym.linea = linea;
-            sym.columna = columna;
+    public SimboloAbstracto agregarSimbolo(K key, int tam, int linea, int columna){
+        if(key instanceof String){
+            key = (K)((((String)key).length() <= TAM_MAX_SYMB) ? key : ((String)key).substring(0, TAM_MAX_SYMB));
         }
         
-        return sym;
+        SimboloAbstracto value = (SimboloAbstracto) this.get(key);
+        
+        if(value == null){
+            value = (SimboloAbstracto) getNuevoSimbolo(key, idx++, linea, columna);
+            this.put(key, (V)value);
+        }else{
+            value.linea = linea;
+            value.columna = columna;
+        }
+        
+        return value;
     }
     //---------------------------------------
     
-    public Collection<SimboloAbstracto> getSimbolos() {
-        return tabla.values();
+    public Collection<V> getSimbolos() {
+        return this.values();
     }
     //---------------------------------------
     
-    public SimboloAbstracto getSimbolo(String texto){
-        return tabla.get(texto);
+    public V getSimbolo(K texto){
+        return this.get(texto);
     }
     //---------------------------------------
     
-    public SimboloAbstracto getSimbolo(int indice){
-        for(SimboloAbstracto sym: tabla.values()){
-            if(sym.equalsIndice(indice))
+    public V getSimbolo(int indice){
+        for(V sym: getSimbolos()){
+            if(sym.equals(indice))
                 return sym;
         }
         
@@ -76,7 +77,7 @@ public abstract class TablaAbstracta {
     //  </editor-fold>
     //---------------------------Abstract Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Abstract Methods">
-    protected abstract SimboloAbstracto getNuevoSimbolo(String texto, int indice, int linea, int columna);
+    protected abstract V getNuevoSimbolo(K texto, int indice, int linea, int columna);
     //---------------------------------------
     //  </editor-fold>    
 }
