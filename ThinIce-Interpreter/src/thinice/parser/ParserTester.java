@@ -3,6 +3,7 @@ package thinice.parser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import thinice.AST.Programa;
 import thinice.lexer.ThinIceLexer;
 
@@ -13,6 +14,12 @@ public class ParserTester {
         
         try {
             input = new FileInputStream(new File(args[0]));
+            
+            FileReader f = new FileReader(args[0]);
+            char[] buf = new char[1024];
+            int n = f.read(buf);
+            
+            System.out.println(new String(buf, 0, n));
             
             ThinIceLexer lexer = new ThinIceLexer(input);
             lexer.setNombreArchivo(args[0]);

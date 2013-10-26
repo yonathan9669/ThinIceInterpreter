@@ -1,5 +1,6 @@
 programa(){
 	entero x := 1;
+	entero vec[10];
 
 	if(x = 1){
 		entero y := x + 2;
@@ -11,6 +12,7 @@ programa(){
 			x := 36;
 		}
 		else{
+			vec[x + 4/2] := 10 + 1;
 			avanzar((y * x / 4 + 1 ), true);
 		}
 	}
@@ -24,6 +26,9 @@ programa(){
 
 		//Prueba de Error Semantico (AMBITO)
 		y := 43;
+
+		//Prueba de Error Semantico (Fuera de Indice)
+		vec[10] := 1;
 	while(false <> true);
 
 	for(x := 0 ; x := x + 1 ; x < 10){
