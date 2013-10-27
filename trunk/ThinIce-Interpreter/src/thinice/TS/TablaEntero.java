@@ -5,7 +5,7 @@ public class TablaEntero extends TablaAbstracta<String, SimboloAbstracto>{
     // <editor-fold defaultstate="collapsed" desc="Abstract Methods">
     @Override
     protected SimboloAbstracto getNuevoSimbolo(String texto, int indice, int linea, int columna) {
-        return new SimboloEntero(indice, texto, linea, columna);
+        return new SimboloEntero(indice, texto, linea, columna, 1);
     }
     //---------------------------------------
     //  </editor-fold>

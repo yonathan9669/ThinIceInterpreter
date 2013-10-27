@@ -3,13 +3,13 @@ package thinice.TS;
 public class SimboloEntero extends SimboloAbstracto{
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
-    public SimboloEntero(int indice, String texto, int linea, int columna) {
-        super(indice, texto, linea, columna);
+    public SimboloEntero(int indice, String texto, int linea, int columna, int tipo) {
+        super(indice, texto, linea, columna, tipo);
     }
     
     //---------------------------------------
-    public SimboloEntero(String texto, int linea, int columna) {
-        super(texto, linea, columna);
+    public SimboloEntero(String texto, int linea, int columna, int tipo) {
+        super(texto, linea, columna, tipo);
     }
     //---------------------------------------
     //  </editor-fold>
@@ -17,7 +17,7 @@ public class SimboloEntero extends SimboloAbstracto{
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
     @Override
     public Object clone() {
-        return new SimboloEntero(indice, texto, linea, columna);
+        return new SimboloEntero(indice, texto, linea, columna, 1);
     }
 
     //---------------------------------------

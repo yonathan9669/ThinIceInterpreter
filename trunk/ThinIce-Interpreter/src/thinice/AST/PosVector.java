@@ -12,7 +12,7 @@ public class PosVector extends Variable{
         super(nombre, linea, columna);
         this.exp = exp;
     }
-    //  </editor-fold>
+    //  </editor-fold>    
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
 

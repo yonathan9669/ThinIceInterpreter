@@ -1,4 +1,5 @@
 programa(){
+    vec[x + 4/2] := 10 + 1;
 	entero x := 1;
 	entero vec[10];
 

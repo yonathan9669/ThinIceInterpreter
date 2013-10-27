@@ -12,12 +12,22 @@ public class SimboloTexto extends SimboloAbstracto{
         super(texto, linea, columna);
     }
     //---------------------------------------
+    
+    public SimboloTexto(int indice, String texto, int linea, int columna, int tipo) {
+        super(indice, texto, linea, columna, tipo);
+    }
+    
+    //---------------------------------------
+    public SimboloTexto(String texto, int linea, int columna, int tipo) {
+        super(texto, linea, columna, tipo);
+    }
+    //---------------------------------------
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
     @Override
     public Object clone() {
-        return new SimboloEntero(indice, texto, linea, columna);
+        return new SimboloTexto(indice, texto, linea, columna);
     }
 
     //---------------------------------------

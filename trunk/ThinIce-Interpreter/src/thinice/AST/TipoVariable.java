@@ -20,4 +20,12 @@ public abstract class TipoVariable extends NodoArbol{
         this.tipo_var = tipo_var;
     }
     //  </editor-fold>
+    //---------------------------Public Methods------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Public Methods">
+
+    public SimboloAbstracto getTipoVar() {
+        return tipo_var;
+    }
+    //---------------------------------------
+    //  </editor-fold>
 }
