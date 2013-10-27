@@ -1,5 +1,8 @@
 programa(){
-    x := - 3 mod - 4 / -5 + -5;
+
+    entero vec[10];
+    
+    z := - 3 mod - 4 / -5 + -5;
     
     entero x;
 	booleano y := true;

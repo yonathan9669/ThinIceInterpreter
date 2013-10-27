@@ -16,6 +16,14 @@ public class Variable extends Expresion{
         this.nombre = nombre;
     }
     //  </editor-fold>
+    //---------------------------Public Methods------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Public Methods">
+
+    public SimboloAbstracto getNombre() {
+        return nombre;
+    }
+    //---------------------------------------
+    //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
 

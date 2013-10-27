@@ -150,8 +150,9 @@ sent ::=			sent_decl:sd PUNT_C
 				:};
 
 
-sent_decl ::=		tipo_var:tv variable:v
-				{:
+sent_decl ::=		tipo_var:tv variable:v  
+				{:                  
+                    TablaAbstracta.idTabla.getSimbolo(v.getNombre().getTexto()).setTipo(tv.getTipoVar().getTipo());
 					RESULT = new DeclSimple(tv, v, getLinea(), getColumna());
 				:}
 				|	tipo_var:tv sent_asig:sa

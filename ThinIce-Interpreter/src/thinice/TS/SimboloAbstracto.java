@@ -1,24 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package thinice.TS;
 
-/**
- *
- * @author Oscar
- */
 public abstract class SimboloAbstracto {
     //---------------------------Static Constants-------------------------------
     // <editor-fold desc="Static Constants">
-    //---------------------------------------
-    //  </editor-fold>
-    //---------------------------Private Attributes-----------------------------
-    // <editor-fold desc="Private Attributes">
-    //---------------------------------------
-    //  </editor-fold>
-    //---------------------------Public Attributes------------------------------
-    // <editor-fold desc="Public Attributes">
+    public static final int BOOLEANO = 0;
+    public static final int ENTERO = 1;
+    
+    public static final String[] nombreTipo = {"Booleano","Entero"};    
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Protected Attributes---------------------------
@@ -27,6 +15,7 @@ public abstract class SimboloAbstracto {
     protected String texto;
     protected int linea;
     protected int columna;
+    protected int tipo;
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
@@ -46,6 +35,23 @@ public abstract class SimboloAbstracto {
         indice = -1;
     }
     //---------------------------------------
+    
+    public SimboloAbstracto(int indice, String texto, int linea, int columna, int tipo) {
+        this.indice = indice;
+        this.texto = texto;
+        this.linea = linea;
+        this.columna = columna;
+        this.tipo = tipo;
+    }
+    
+    //---------------------------------------
+    public SimboloAbstracto(String texto, int linea, int columna, int tipo) {
+        this.texto = texto;
+        this.linea = linea;
+        this.columna = columna;
+        indice = -1;
+        this.tipo = tipo;
+    }
     //  </editor-fold>
     //---------------------------Getters---------------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Getters">
@@ -67,10 +73,23 @@ public abstract class SimboloAbstracto {
     public int getLinea() {
         return linea;
     }
+    
+    //---------------------------------------
+    public int getTipo() {
+        return tipo;
+    }
+    
+    //---------------------------------------
+    public String getNombreTipo() {
+        return nombreTipo[tipo];
+    }
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Setters---------------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Setters">
+    public void setTipo(int tipo){
+        this.tipo = tipo;
+    }
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Public Methods--------------------------------- 
@@ -84,10 +103,6 @@ public abstract class SimboloAbstracto {
         return indice==index;
     }
     
-    //---------------------------------------
-    //  </editor-fold>
-    //---------------------------Private Methods-------------------------------- 
-    // <editor-fold defaultstate="collapsed" desc="Private Methods">
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 

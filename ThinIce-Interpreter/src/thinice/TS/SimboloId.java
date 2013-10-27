@@ -17,7 +17,7 @@ public class SimboloId extends SimboloAbstracto{
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
     @Override
     public Object clone() {
-        return new SimboloEntero(indice, texto, linea, columna);
+        return new SimboloId(indice, texto, linea, columna);
     }
 
     //---------------------------------------
