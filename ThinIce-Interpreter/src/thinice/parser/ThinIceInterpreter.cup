@@ -28,28 +28,27 @@ action code {:
 :}
 
 parser code {:
-    int omerrs = 0;
+	int omerrs = 0;
 
-    public int getOmerrs(){
-        return omerrs;
-    }
-
-    public void syntax_error(Symbol cur_token) {
-        int lineno = action_obj.getLinea();
-        int column = action_obj.getColumna();
-	String filename = action_obj.getNombreArchivo().getTexto();
-        System.err.print(filename + ": " + lineno 
-		         + ":" + column + ": error de sintáxis cerca de ");
-        Utilidades.imprimirToken(cur_token);
-	omerrs++;
-	if (omerrs>50) {
-	   System.err.println("El análisis se ha detenido porque se encontraron muchos errores");
-	   System.exit(1);
+	public int getOmerrs(){
+		return omerrs;
 	}
-    }
 
-    public void unrecovered_syntax_error(Symbol cur_token) {
-    }
+	public void syntax_error(Symbol cur_token) {
+		int lineno = action_obj.getLinea();
+		int column = action_obj.getColumna();
+		String filename = action_obj.getNombreArchivo().getTexto();
+		System.err.print(filename + ": " + lineno + ":" + column + ": error de sintáxis cerca de ");
+		Utilidades.imprimirToken(cur_token);
+		omerrs++;
+		if (omerrs>50) {
+			System.err.println("El análisis se ha detenido porque se encontraron muchos errores");
+			System.exit(1);
+		}
+	}
+
+	public void unrecovered_syntax_error(Symbol cur_token) {
+	}
 :}
 //---------------------------Terminal Definition--------------------------------
 
@@ -151,12 +150,13 @@ sent ::=			sent_decl:sd PUNT_C
 
 
 sent_decl ::=		tipo_var:tv variable:v  
-				{:                  
-                    TablaAbstracta.idTabla.getSimbolo(v.getNombre().getTexto()).setTipo(tv.getTipoVar().getTipo());
+				{:
+					v.getNombre().setTipo(tv.getTipoVar().getTipo());
 					RESULT = new DeclSimple(tv, v, getLinea(), getColumna());
 				:}
 				|	tipo_var:tv sent_asig:sa
 				{:
+					sa.getVariable().getNombre().setTipo(tv.getTipoVar().getTipo());
 					RESULT = new DeclCompleja(tv, sa, getLinea(), getColumna());
 				:};
 tipo_var ::=		INT:i
@@ -177,10 +177,12 @@ sent_asig ::=		variable:v ASIG:a exp:e
 
 func_call ::=		ID:id PAR_I lista_parm:lp PAR_D
 				{:
+					id.setTipo(SimboloAbstracto.FUNCION);
 					RESULT = new LlamadaFuncion(id, lp, id.getLinea(), id.getColumna());
 				:}
-				|   ID:id PAR_I PAR_D
+				|	ID:id PAR_I PAR_D
 				{:
+					id.setTipo(SimboloAbstracto.FUNCION);
 					RESULT = new LlamadaFuncion(id, id.getLinea(), id.getColumna());
 				:};
 

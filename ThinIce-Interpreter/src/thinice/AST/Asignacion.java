@@ -3,10 +3,16 @@ package thinice.AST;
 import java.io.PrintStream;
 
 public class Asignacion extends Sentencia{
-    //---------------------------Protected Attributes-----------------------------
+    //---------------------------Protected Attributes---------------------------
     // <editor-fold desc="Private Attributes">
     protected Variable id;
     protected Expresion expr;
+    //  </editor-fold>
+    //---------------------------Getters---------------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Getters">
+    public Variable getVariable(){
+        return id;
+    }
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">

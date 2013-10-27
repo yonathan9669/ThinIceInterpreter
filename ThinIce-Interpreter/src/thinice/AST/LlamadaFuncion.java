@@ -36,7 +36,7 @@ public class LlamadaFuncion extends Sentencia{
     @Override
     public void dump(PrintStream out, int n) {
         dumpLineaColumna(out, n);
-        out.println("_call");
+        out.println("_llamadaFuncion");
         dump_SimboloAbstracto(out, n + 2, id);
         if(tieneParam)
             params.dump(out, n + 2);

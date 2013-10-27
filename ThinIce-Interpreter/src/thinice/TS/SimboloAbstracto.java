@@ -5,8 +5,9 @@ public abstract class SimboloAbstracto {
     // <editor-fold desc="Static Constants">
     public static final int BOOLEANO = 0;
     public static final int ENTERO = 1;
+    public static final int FUNCION = 1;
     
-    public static final String[] nombreTipo = {"Booleano","Entero"};    
+    public static final String[] nombreTipo = {"Booleano","Entero","Funcion"};    
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Protected Attributes---------------------------

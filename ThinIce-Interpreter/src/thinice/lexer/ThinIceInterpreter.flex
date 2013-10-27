@@ -80,8 +80,8 @@ NOID					=	{NUMERO}(({letra}|{conectores}){digito}*)+
 ";"					{ return symbol(PUNT_C,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
 ","					{ return symbol(COMA,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
 
-booleano			{ return symbol(BOOLEAN,		new SimboloTexto(yytext(), getLinea(), getColumna(), 0)); }
-entero				{ return symbol(INT,			new SimboloTexto(yytext(), getLinea(), getColumna(), 1)); }
+booleano			{ return symbol(BOOLEAN,		new SimboloTexto(yytext(), getLinea(), getColumna(), SimboloAbstracto.BOOLEANO)); }
+entero				{ return symbol(INT,			new SimboloTexto(yytext(), getLinea(), getColumna(), SimboloAbstracto.ENTERO)); }
 
 if					{ return symbol(IF,				new SimboloTexto(yytext(), getLinea(), getColumna())); }
 else				{ return symbol(ELSE,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
