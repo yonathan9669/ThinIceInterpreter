@@ -5,7 +5,7 @@ public class TablaBooleano extends TablaAbstracta<String, SimboloAbstracto>{
     // <editor-fold defaultstate="collapsed" desc="Abstract Methods">
     @Override
     protected SimboloAbstracto getNuevoSimbolo(String texto, int indice, int linea, int columna){
-        return new SimboloBooleano(indice, texto, linea, columna, 0);
+        return new SimboloBooleano(indice, texto, linea, columna);
     }
     //---------------------------------------
     //  </editor-fold>    
