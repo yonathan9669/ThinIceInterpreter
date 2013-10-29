@@ -9,11 +9,18 @@ public class DeclCompleja extends Declaracion{
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
-    public DeclCompleja(TipoVariable tipo, Asignacion asign, int linea, int columna) {
-        super(linea, columna);
-        this.tipo = tipo;
+    public DeclCompleja(int tipo, Asignacion asign, int linea, int columna) {
+        super(tipo, linea, columna);
         this.asign = asign;
     }
+
+    //  </editor-fold>
+    //---------------------------Getters---------------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Getters">
+    public Asignacion getAsign() {
+        return asign;
+    }
+    //---------------------------------------
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
@@ -21,9 +28,14 @@ public class DeclCompleja extends Declaracion{
     public void dump(PrintStream out, int n) {
         dumpLineaColumna(out, n);
         out.println("_declaracion_compleja");
-        tipo.dump(out, n+2);
+        super.dump(out, n+2);
         asign.dump(out, n+2);
     }
-    //  </editor-fold>
     
+    //---------------------------------------
+    @Override
+    public Variable getId() {
+        return asign.getVariable();
+    }
+    //  </editor-fold>
 }

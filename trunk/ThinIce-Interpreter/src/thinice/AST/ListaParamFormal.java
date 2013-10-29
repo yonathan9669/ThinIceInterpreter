@@ -9,6 +9,22 @@ public class ListaParamFormal extends NodoLista<ParamFormal>{
         super();
     }    
     //  </editor-fold>
+    //---------------------------Public Methods--------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Public Methods">
+    public String getTextParameters(){
+        if(this.lista.isEmpty())
+            return "";
+        
+        String params = "";
+        
+        for (ParamFormal param : lista) {
+            params += param.getTextFormalParam() + ", ";
+        }
+        
+        return params.substring(0, params.lastIndexOf(","));
+    }
+    //---------------------------------------
+    //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
 
@@ -18,6 +34,14 @@ public class ListaParamFormal extends NodoLista<ParamFormal>{
             pf.dump(out, n);
         }
     }
+    
+    //---------------------------------------
+    @Override
+    public void aceptar(Visitor visit, Object... params) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    //---------------------------------------
     //  </editor-fold>
     
 }

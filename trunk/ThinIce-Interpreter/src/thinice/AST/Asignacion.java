@@ -13,6 +13,13 @@ public class Asignacion extends Sentencia{
     public Variable getVariable(){
         return id;
     }
+    
+    //---------------------------------------
+    public Expresion getExpr() {
+        return expr;
+    }
+    
+    //---------------------------------------
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
@@ -31,6 +38,14 @@ public class Asignacion extends Sentencia{
         id.dump(out, n+2);
         expr.dump(out, n+2);
     }
+    
+    //---------------------------------------
+    @Override
+    public void aceptar(Visitor visit, Object... params) {
+        visit.visitar(this, params);
+    }
+    
+    //---------------------------------------
     //  </editor-fold>
     
 }

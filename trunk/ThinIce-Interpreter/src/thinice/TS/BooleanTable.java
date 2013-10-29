@@ -1,11 +1,11 @@
 package thinice.TS;
 
-public class TablaBooleano extends TablaAbstracta<String, SimboloAbstracto>{
+public class BooleanTable extends AbstractTable<String, AbstractSymbol>{
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Abstract Methods">
     @Override
-    protected SimboloAbstracto getNuevoSimbolo(String texto, int indice, int linea, int columna){
-        return new SimboloBooleano(indice, texto, linea, columna);
+    protected AbstractSymbol getNewSymbol(String texto, int indice, int linea, int columna){
+        return new BooleanSymbol(indice, texto, linea, columna);
     }
     //---------------------------------------
     //  </editor-fold>    

@@ -1,19 +1,20 @@
 package thinice.AST;
 
 import java.io.PrintStream;
-import thinice.util.Utilidades;
+import thinice.util.Utilities;
 
-public class Relacionales extends ExpresionBinaria{
+public class Relacionales extends ExpresionBinaria {
     //---------------------------Static Constants-------------------------------
     // <editor-fold desc="Static Constants">
+
     public static final int MENOR = 0;
     public static final int MENOR_IGUAL = 1;
     public static final int MAYOR = 2;
     public static final int MAYOR_IGUAL = 3;
     public static final int IGUAL = 4;
     public static final int DIFERENTE = 5;
-    
-    public static final String[] typeName = {"_menor_que","_menor_igual_que","_mayor_que","_mayor_igual_que","_igual_que","_diferente_que"};
+    public static final String[] typeName = {"_menor_que", "_menor_igual_que", "_mayor_que", "_mayor_igual_que", "_igual_que", "_diferente_que"};
+    private static final String[] typeToken = {"<", "<=", ">", ">=", "=", "<>"};
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Private Attributes-----------------------------
@@ -23,6 +24,7 @@ public class Relacionales extends ExpresionBinaria{
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
+
     public Relacionales(Expresion expr1, Expresion expr2, int TIPO, int linea, int columna) {
         super(expr1, expr2, linea, columna);
         this.type = TIPO;
@@ -35,10 +37,23 @@ public class Relacionales extends ExpresionBinaria{
     public void dump(PrintStream out, int n) {
         dumpLineaColumna(out, n);
         out.println(typeName[type]);
-        if(tipo_expr!=null) out.println(Utilidades.pad(n+2)+"tipo_expr: "+tipo_expr);
-        expr1.dump(out, n+2);
-        expr2.dump(out, n+2);
+        if (tipo_expr != null) {
+            out.println(Utilities.pad(n + 2) + "tipo_expr: " + tipo_expr);
+        }
+        expr1.dump(out, n + 2);
+        expr2.dump(out, n + 2);
     }
+
     //---------------------------------------
+    @Override
+    public void aceptar(Visitor visit, Object... params) {
+        visit.visitar(this, params);
+    }
+
+    //---------------------------------------
+    @Override
+    public String getTextExpression() {
+        return this.expr1.getTextExpression() + " " + typeToken[type] + " " + this.expr2.getTextExpression();
+    }
     //  </editor-fold>
 }

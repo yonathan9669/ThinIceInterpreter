@@ -1,15 +1,15 @@
 package thinice.TS;
 
-public class SimboloVector extends SimboloId{
+public class ArraySymbol extends IdSymbol{
     //---------------------------Private Attributes-----------------------------
     // <editor-fold desc="Private Attributes">
-    private SimboloAbstracto[] elementos;
+    private AbstractSymbol[] elementos;
     private int size;
     //---------------------------------------
     //  </editor-fold
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
-    public SimboloVector(SimboloAbstracto id, int linea, int columna) {
+    public ArraySymbol(AbstractSymbol id, int linea, int columna) {
         super(id.getIndice(), id.getTexto(), linea, columna);
     }
     //  </editor-fold>>
@@ -17,18 +17,18 @@ public class SimboloVector extends SimboloId{
     // <editor-fold defaultstate="collapsed" desc="Public Methods">
     public void initVec(int size){
         this.size = size;
-        elementos = new SimboloAbstracto[size];
+        elementos = new AbstractSymbol[size];
     }
     
     //---------------------------------------
-    public SimboloAbstracto getValue(int pos)throws ArrayIndexOutOfBoundsException{
+    public AbstractSymbol getValue(int pos)throws ArrayIndexOutOfBoundsException{
         if(pos < 0 || pos >= pos)
             throw new ArrayIndexOutOfBoundsException("El indice solicitado esta fuera de los limites del vector := "+ texto + "["+size+"]");
         
         return elementos[pos];
     }
     //---------------------------------------
-    public void setValue(int pos, SimboloAbstracto value)throws ArrayIndexOutOfBoundsException{
+    public void setValue(int pos, AbstractSymbol value)throws ArrayIndexOutOfBoundsException{
         if(pos < 0 || pos >= pos)
             throw new ArrayIndexOutOfBoundsException("La posicion que intenta acceder no pertenece al vector := "+ texto + "["+size+"]");
         
@@ -41,7 +41,7 @@ public class SimboloVector extends SimboloId{
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
     @Override
     public Object clone() {
-        return new SimboloVector(new SimboloId(texto, linea, columna), linea, columna);
+        return new ArraySymbol(new IdSymbol(indice, texto, linea, columna), linea, columna);
     }
     //---------------------------------------
     //  </editor-fold>

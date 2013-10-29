@@ -1,13 +1,17 @@
 package thinice.TS;
 
-public abstract class SimboloAbstracto {
+public abstract class AbstractSymbol {
     //---------------------------Static Constants-------------------------------
     // <editor-fold desc="Static Constants">
-    public static final int BOOLEANO = 0;
-    public static final int ENTERO = 1;
-    public static final int FUNCION = 1;
+    public static final int NOTYPE = 0;
+    public static final int BOOLEANO = 1;
+    public static final int ENTERO = 2;
+    public static final int FUNCION = 3;
+    public static final int VARIABLE = 4;
+    public static final int VECTOR = 5;
     
-    public static final String[] nombreTipo = {"Booleano","Entero","Funcion"};    
+    public static final String[] nombreTipo = { "_notype", "_booleano", "_entero",
+                                                "_funcion","_variable", "_vector"};    
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Protected Attributes---------------------------
@@ -21,37 +25,21 @@ public abstract class SimboloAbstracto {
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
-    public SimboloAbstracto(int indice, String texto, int linea, int columna) {
+    public AbstractSymbol(int indice, String texto, int linea, int columna) {
         this.indice = indice;
         this.texto = texto;
         this.linea = linea;
         this.columna = columna;
+        this.tipo = AbstractSymbol.NOTYPE;
     }
     
     //---------------------------------------
-    public SimboloAbstracto(String texto, int linea, int columna) {
+    public AbstractSymbol(String texto, int linea, int columna) {
         this.texto = texto;
         this.linea = linea;
         this.columna = columna;
+        this.tipo = AbstractSymbol.NOTYPE;
         indice = -1;
-    }
-    //---------------------------------------
-    
-    public SimboloAbstracto(int indice, String texto, int linea, int columna, int tipo) {
-        this.indice = indice;
-        this.texto = texto;
-        this.linea = linea;
-        this.columna = columna;
-        this.tipo = tipo;
-    }
-    
-    //---------------------------------------
-    public SimboloAbstracto(String texto, int linea, int columna, int tipo) {
-        this.texto = texto;
-        this.linea = linea;
-        this.columna = columna;
-        indice = -1;
-        this.tipo = tipo;
     }
     //  </editor-fold>
     //---------------------------Getters---------------------------------------- 
@@ -76,14 +64,10 @@ public abstract class SimboloAbstracto {
     }
     
     //---------------------------------------
-    public int getTipo() {
+    public int getTipo(){
         return tipo;
     }
     
-    //---------------------------------------
-    public String getNombreTipo() {
-        return nombreTipo[tipo];
-    }
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Setters---------------------------------------- 
@@ -91,6 +75,7 @@ public abstract class SimboloAbstracto {
     public void setTipo(int tipo){
         this.tipo = tipo;
     }
+    
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Public Methods--------------------------------- 
@@ -110,8 +95,8 @@ public abstract class SimboloAbstracto {
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
     @Override
     public boolean equals(Object otro) {
-	return (otro instanceof SimboloAbstracto) && 
-	    ((SimboloAbstracto)otro).indice == this.indice;
+	return (otro instanceof AbstractSymbol) && 
+	    ((AbstractSymbol)otro).indice == this.indice;
     }
 
     //---------------------------------------

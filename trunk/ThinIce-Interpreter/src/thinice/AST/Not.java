@@ -1,7 +1,7 @@
 package thinice.AST;
 
 import java.io.PrintStream;
-import thinice.util.Utilidades;
+import thinice.util.Utilities;
 
 public class Not extends Expresion{
     //---------------------------Private Attributes-----------------------------
@@ -14,6 +14,15 @@ public class Not extends Expresion{
         super(linea, columna);
         this.expr = expr;
     }
+
+    //  </editor-fold>
+    //---------------------------Getters---------------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Getters">
+    public Expresion getExpr() {
+        return expr;
+    }
+    
+    //---------------------------------------
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
@@ -22,9 +31,20 @@ public class Not extends Expresion{
     public void dump(PrintStream out, int n) {
         dumpLineaColumna(out, n);
         out.println("_negacion");
-        if(tipo_expr!=null) out.println(Utilidades.pad(n+2)+"tipo_expr: "+tipo_expr);
+        if(tipo_expr!=null) out.println(Utilities.pad(n+2)+"tipo_expr: "+tipo_expr);
         expr.dump(out, n+2);
     }
+    
     //---------------------------------------
+    @Override
+    public void aceptar(Visitor visit, Object... params) {
+        visit.visitar(this, params);
+    }
+    
+    //---------------------------------------
+    @Override
+    public String getTextExpression() {
+        return " ! " + this.expr.getTextExpression();
+    }
     //  </editor-fold>
 }

@@ -1,7 +1,7 @@
 package thinice.AST;
 
 import java.io.PrintStream;
-import thinice.util.Utilidades;
+import thinice.util.Utilities;
 
 public class And extends ExpresionBinaria{
     //---------------------------Constructors-----------------------------------
@@ -17,10 +17,21 @@ public class And extends ExpresionBinaria{
     public void dump(PrintStream out, int n) {
         dumpLineaColumna(out, n);
         out.println("_and");
-        if(tipo_expr!=null) out.println(Utilidades.pad(n+2)+"tipo_expr: "+tipo_expr);
+        if(tipo_expr!=null) out.println(Utilities.pad(n+2)+"tipo_expr: "+tipo_expr);
         expr1.dump(out, n+2);
         expr2.dump(out, n+2);
     }
+    
     //---------------------------------------
+    @Override
+    public void aceptar(Visitor visit, Object... params) {
+        visit.visitar(this, params);
+    }
+    
+    //---------------------------------------
+    @Override
+    public String getTextExpression() {
+        return this.expr1.getTextExpression() + " Y " + this.expr2.getTextExpression();
+    }
     //  </editor-fold>
 }

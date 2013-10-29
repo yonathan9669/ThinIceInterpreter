@@ -1,15 +1,15 @@
 package thinice.TS;
 
-public class SimboloBooleano extends SimboloAbstracto{
+public class IdSymbol extends AbstractSymbol{
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
-    public SimboloBooleano(int indice, String texto, int linea, int columna) {
-        super(indice, texto, linea, columna, SimboloAbstracto.BOOLEANO);
+    public IdSymbol(int indice, String texto, int linea, int columna) {
+        super(indice, texto, linea, columna);
     }
     
     //---------------------------------------
-    public SimboloBooleano(String texto, int linea, int columna) {
-        super(texto, linea, columna, SimboloAbstracto.BOOLEANO);
+    public IdSymbol(String texto, int linea, int columna) {
+        super(texto, linea, columna);
     }
     //---------------------------------------
     //  </editor-fold>
@@ -17,7 +17,7 @@ public class SimboloBooleano extends SimboloAbstracto{
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
     @Override
     public Object clone() {
-        return new SimboloBooleano(indice, texto, linea, columna);
+        return new IdSymbol(indice, texto, linea, columna);
     }
 
     //---------------------------------------

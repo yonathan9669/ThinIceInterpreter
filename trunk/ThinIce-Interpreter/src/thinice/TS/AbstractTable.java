@@ -3,7 +3,7 @@ package thinice.TS;
 import java.util.Collection;
 import java.util.HashMap;
 
-public abstract class TablaAbstracta<K, V> extends HashMap<K, V>{
+public abstract class AbstractTable<K, V> extends HashMap<K, V>{
     //---------------------------Private Attributes-----------------------------
     // <editor-fold desc="Private Attributes">
     private int idx;   
@@ -16,15 +16,15 @@ public abstract class TablaAbstracta<K, V> extends HashMap<K, V>{
     //  </editor-fold>
     //---------------------------Public Attributes------------------------------
     // <editor-fold desc="Public Attributes">
-    public static TablaEntero intTabla = new TablaEntero();
-    public static TablaBooleano boolTabla = new TablaBooleano();
-    public static TablaId idTabla = new TablaId();
-    public static TablaTexto texTabla = new TablaTexto();
-    public static TablaVector vecTabla = new TablaVector();
+    public static IntTable intTabla = new IntTable();
+    public static BooleanTable boolTabla = new BooleanTable();
+    public static IdTable idTabla = new IdTable();
+    public static StringTable texTabla = new StringTable();
+    public static ArrayTable vecTabla = new ArrayTable();
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
-    public TablaAbstracta() {
+    public AbstractTable() {
         super();
         idx = 0;
     }   
@@ -32,22 +32,23 @@ public abstract class TablaAbstracta<K, V> extends HashMap<K, V>{
     //  </editor-fold>
     //---------------------------Public Methods--------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Public Methods">
-    public SimboloAbstracto agregarSimbolo(K texto, int linea, int columna){
-        return agregarSimbolo(texto, TAM_MAX_SYMB, linea, columna);
+    public AbstractSymbol addSymbol(K texto, int linea, int columna){
+        return addSymbol(texto, TAM_MAX_SYMB, linea, columna);
     }
     
     //---------------------------------------
-    public SimboloAbstracto agregarSimbolo(K key, int tam, int linea, int columna){
+    public AbstractSymbol addSymbol(K key, int tam, int linea, int columna){
         if(key instanceof String){
             key = (K)((((String)key).length() <= TAM_MAX_SYMB) ? key : ((String)key).substring(0, TAM_MAX_SYMB));
         }
         
-        SimboloAbstracto value = (SimboloAbstracto) this.get(key);
+        AbstractSymbol value = ((AbstractSymbol) this.get(key));
         
         if(value == null){
-            value = (SimboloAbstracto) getNuevoSimbolo(key, idx++, linea, columna);
+            value = (AbstractSymbol) getNewSymbol(key, idx++, linea, columna);
             this.put(key, (V)value);
         }else{
+            value = (AbstractSymbol) value.clone();
             value.linea = linea;
             value.columna = columna;
         }
@@ -77,7 +78,7 @@ public abstract class TablaAbstracta<K, V> extends HashMap<K, V>{
     //  </editor-fold>
     //---------------------------Abstract Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Abstract Methods">
-    protected abstract V getNuevoSimbolo(K texto, int indice, int linea, int columna);
+    protected abstract V getNewSymbol(K texto, int indice, int linea, int columna);
     //---------------------------------------
     //  </editor-fold>    
 }

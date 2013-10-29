@@ -1,17 +1,16 @@
 package thinice.AST;
 
-import java.io.PrintStream;
-import thinice.TS.SimboloAbstracto;
+import thinice.TS.AbstractSymbol;
 
-public class Constante extends Expresion{
+public abstract class Constante extends Expresion{
     //---------------------------Protected Attributes---------------------------
     // <editor-fold desc="Private Attributes">
-    protected SimboloAbstracto token;
+    protected AbstractSymbol token;
     //  </editor-fold>
     
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
-    public Constante(int linea, int columna, SimboloAbstracto token) {
+    public Constante(int linea, int columna, AbstractSymbol token) {
         super(linea, columna);
         this.token = token;
     }
@@ -20,9 +19,11 @@ public class Constante extends Expresion{
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
     @Override
-    public void dump(PrintStream out, int n) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getTextExpression() {
+        return this.token.getTexto();
     }
+    
+    //---------------------------------------
     //  </editor-fold>
     
 }

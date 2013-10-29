@@ -9,6 +9,22 @@ public class ListaParametros extends NodoLista<Expresion>{
         super();
     }    
     //  </editor-fold>
+    //---------------------------Public Methods--------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Public Methods">
+    public String getTextParameters(){
+        if(this.lista.isEmpty())
+            return "";
+        
+        String params = "";
+        
+        for (Expresion expresion : lista) {
+            params += expresion.tipo_expr.getTexto() + ", ";
+        }
+        
+        return params.substring(0, params.lastIndexOf(","));
+    }
+    //---------------------------------------
+    //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
 
@@ -18,6 +34,16 @@ public class ListaParametros extends NodoLista<Expresion>{
             expr.dump(out, n);
         }
     }
+    
+    //---------------------------------------
+    @Override
+    public void aceptar(Visitor visit, Object... params) {
+        for (Expresion expresion : this.lista) {
+            expresion.aceptar(visit, params);
+        }
+    }
+    
+    //---------------------------------------
     //  </editor-fold>
     
 }

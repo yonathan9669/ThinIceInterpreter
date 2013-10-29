@@ -1,8 +1,8 @@
 package thinice.AST;
 
 import java.io.PrintStream;
-import thinice.TS.SimboloAbstracto;
-import thinice.util.Utilidades;
+import thinice.TS.AbstractSymbol;
+import thinice.util.Utilities;
 
 public abstract class NodoArbol {
     //---------------------------Protected Attributes---------------------------
@@ -79,19 +79,20 @@ public abstract class NodoArbol {
     //  </editor-fold>
     //---------------------------Protected Methods------------------------------ 
     // <editor-fold defaultstate="collapsed" desc="Protected Methods">
-    protected void dump_SimboloAbstracto(PrintStream out, int n, SimboloAbstracto sym) {
-        out.print(Utilidades.pad(n));
+    protected void dump_SimboloAbstracto(PrintStream out, int n, AbstractSymbol sym) {
+        out.print(Utilities.pad(n));
         out.println(sym.getTexto());
     }
     
     protected void dumpLineaColumna(PrintStream out, int n) {
-        out.print(Utilidades.pad(n) + "#" + linea + ":"+columna+": ");
+        out.print(Utilities.pad(n) + "#" + linea + ":"+columna+": ");
     }
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Abstract Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Abstract Methods">
     public abstract void dump(PrintStream out, int n);
+    public abstract void aceptar(Visitor visit, Object... params);
     //---------------------------------------
     //  </editor-fold>
 }

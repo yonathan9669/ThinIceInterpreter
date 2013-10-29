@@ -1,20 +1,22 @@
 package thinice.util;
 
 import java.io.PrintStream;
-import thinice.TS.SimboloAbstracto;
+import thinice.TS.AbstractSymbol;
 import java_cup.runtime.Symbol;
 import thinice.parser.ThinIceTokenDef;
 
-public class Utilidades {
+public class Utilities {
 
     private static String padding = "                                                                                ";
 
+    //---------------------------Public static Methods--------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Public static Methods">
     public static String tokenEnTexto(Symbol s) {
         switch (s.sym) {
             case ThinIceTokenDef.LLA_I:
                 return "{";
             //case ThinIceTokenDef.EMPTY:
-                //return "?";
+            //return "?";
             case ThinIceTokenDef.ENTERO:
                 return "ENTERO";
             case ThinIceTokenDef.LLA_D:
@@ -92,9 +94,10 @@ public class Utilidades {
         }
     }
 
+    //---------------------------------------
     public static void imprimirToken(Symbol s) {
         System.err.print(tokenEnTexto(s));
-        SimboloAbstracto sym = (SimboloAbstracto) s.value;;
+        AbstractSymbol sym = (AbstractSymbol) s.value;
 
         switch (s.sym) {
             case ThinIceTokenDef.ENTERO:
@@ -111,10 +114,17 @@ public class Utilidades {
         System.err.println("");
     }
 
+    //---------------------------------------
     public static void dumpToken(PrintStream str, Symbol s) {
-        SimboloAbstracto sym = (SimboloAbstracto) s.value;
-        str.print("#" + sym.getLinea() + ":" + sym.getColumna() + ": " + tokenEnTexto(s));
-
+        AbstractSymbol sym = null;
+        
+        if (s.value instanceof Integer) {
+            str.print("#[ | ]: DECLARACION : " + AbstractSymbol.nombreTipo[((Integer)s.value).intValue()]);
+        } else {
+            sym = (AbstractSymbol) s.value;
+            str.print("#" + sym.getLinea() + ":" + sym.getColumna() + ": " + tokenEnTexto(s));
+        }
+        
         switch (s.sym) {
             case ThinIceTokenDef.BOOLEANO:
             case ThinIceTokenDef.ENTERO:
@@ -131,6 +141,7 @@ public class Utilidades {
         str.println("");
     }
 
+    //---------------------------------------
     public static String pad(int n) {
         if (n > 80) {
             return padding;
@@ -140,9 +151,13 @@ public class Utilidades {
         }
         return padding.substring(0, n);
     }
-
+    
+    //---------------------------------------
     public static void fatalError(String msg) {
         (new Throwable(msg)).printStackTrace();
         System.exit(1);
     }
+    //---------------------------------------
+    //  </editor-fold>
+    
 }

@@ -1,19 +1,26 @@
 package thinice.AST;
 
 import java.io.PrintStream;
-import thinice.TS.SimboloAbstracto;
-import thinice.util.Utilidades;
+import thinice.TS.AbstractSymbol;
+import thinice.util.Utilities;
 
 public class Entero extends Constante{
+    //---------------------------Static Constants-------------------------------
+    // <editor-fold desc="Static Constants">
+    public static final int POSITIVO = 0;
+    public static final int NEGATIVO = 1;
+    
+    public static final String[] signo = {"positivo", "negativo"};    
+    //  </editor-fold>
     //---------------------------Private Attributes-----------------------------
     // <editor-fold desc="Private Attributes">
-    protected String signo;
+    protected boolean isPositive;
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
-    public Entero(SimboloAbstracto token, int linea, int columna, String signo) {
+    public Entero(AbstractSymbol token, int linea, int columna, boolean isPositive) {
         super(linea, columna, token);
-        this.signo = signo;
+        this.isPositive = isPositive;
     }
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
@@ -22,11 +29,19 @@ public class Entero extends Constante{
     @Override
     public void dump(PrintStream out, int n) {
         dumpLineaColumna(out, n);
-        out.print("_entero_");
-        out.println(signo);
-        if(tipo_expr!=null) out.println(Utilidades.pad(n+2)+"tipo_expr: "+tipo_expr);
+        out.print("_constante");
+        out.print(" " + AbstractSymbol.nombreTipo[AbstractSymbol.ENTERO]);
+        out.println(" " + signo[(isPositive) ? POSITIVO:NEGATIVO]);
+        if(tipo_expr!=null) out.println(Utilities.pad(n+2)+"tipo_expr: "+tipo_expr);
         dump_SimboloAbstracto(out, n + 2, token);
     }
+    
     //---------------------------------------
+    @Override
+    public void aceptar(Visitor visit, Object... params) {
+        visit.visitar(this, params);
+    }
     //  </editor-fold>
+
+    
 }

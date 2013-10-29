@@ -1,12 +1,12 @@
 package thinice.AST;
 
 import java.io.PrintStream;
-import thinice.TS.SimboloAbstracto;
+import thinice.TS.AbstractSymbol;
 
 public class LlamadaFuncion extends Sentencia{
     //---------------------------Protected Attributes-----------------------------
     // <editor-fold desc="Protected Attributes">
-    protected SimboloAbstracto id;
+    protected AbstractSymbol id;
     protected ListaParametros params;
     //  </editor-fold>
     //---------------------------Private Attributes-----------------------------
@@ -15,7 +15,7 @@ public class LlamadaFuncion extends Sentencia{
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
-    public LlamadaFuncion(SimboloAbstracto id, ListaParametros params, int linea, int columna) {
+    public LlamadaFuncion(AbstractSymbol id, ListaParametros params, int linea, int columna) {
         super(linea, columna);
         this.id = id;
         this.params = params;
@@ -23,24 +23,50 @@ public class LlamadaFuncion extends Sentencia{
     }
     
     //---------------------------------------
-    public LlamadaFuncion(SimboloAbstracto id, int linea, int columna) {
+    public LlamadaFuncion(AbstractSymbol id, int linea, int columna) {
         super(linea, columna);
         this.id = id;
         this.params = null;
         tieneParam = false;
     }
+
     //---------------------------------------
+    //  </editor-fold>
+    //---------------------------Getters---------------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Getters">
+    public AbstractSymbol getId() {
+        return id;
+    }
+    
+    //---------------------------------------
+    public ListaParametros getParams() {
+        return params;
+    }
+    
+    //---------------------------------------
+    public String getTextFunction(){
+        return this.id.getTexto() + "("+this.params.getTextParameters()+")";
+    }
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
     @Override
     public void dump(PrintStream out, int n) {
         dumpLineaColumna(out, n);
-        out.println("_llamadaFuncion");
+        out.print("_llamada");
+        out.println(" " + AbstractSymbol.nombreTipo[AbstractSymbol.FUNCION]);
         dump_SimboloAbstracto(out, n + 2, id);
         if(tieneParam)
             params.dump(out, n + 2);
     }
+    
+    //---------------------------------------
+    @Override
+    public void aceptar(Visitor visit, Object... params) {
+        visit.visitar(this, params);
+    }
+    
+    //---------------------------------------
     //  </editor-fold>
     
 }
