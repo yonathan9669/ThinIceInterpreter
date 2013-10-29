@@ -22,7 +22,7 @@ action code {:
 		return ((ThinIceLexer)parser.getScanner()).getColumna();
 	}
 
-	SimboloAbstracto getNombreArchivo() {
+	AbstractSymbol getNombreArchivo() {
 		return ((ThinIceLexer)parser.getScanner()).getNombreArchivo();
 	}
 :}
@@ -35,11 +35,13 @@ parser code {:
 	}
 
 	public void syntax_error(Symbol cur_token) {
-		int lineno = action_obj.getLinea();
+		int line = action_obj.getLinea();
 		int column = action_obj.getColumna();
 		String filename = action_obj.getNombreArchivo().getTexto();
-		System.err.print(filename + ": " + lineno + ":" + column + ": error de sintáxis cerca de ");
-		Utilidades.imprimirToken(cur_token);
+		
+		System.err.print(filename + ":\n#" + line + ":" + column + ": error de sintáxis cerca de ");
+		Utilities.imprimirToken(cur_token);
+
 		omerrs++;
 		if (omerrs>50) {
 			System.err.println("El análisis se ha detenido porque se encontraron muchos errores");
@@ -52,17 +54,17 @@ parser code {:
 :}
 //---------------------------Terminal Definition--------------------------------
 
-terminal SimboloAbstracto PROGRAM;
-terminal SimboloAbstracto PAR_I, PAR_D, LLA_I, LLA_D, COR_I, COR_D, PUNT_C, COMA;
-terminal SimboloAbstracto INT, BOOLEAN;
-terminal SimboloAbstracto IF, ELSE, DO, WHILE, FOR;
-terminal SimboloAbstracto ASIG;
-terminal SimboloAbstracto SUMA, RESTA, MULTI, DIV, MOD;
-terminal SimboloAbstracto AND, OR, NOT;
-terminal SimboloAbstracto MENOR, MENOR_IGUAL, MAYOR, MAYOR_IGUAL, IGUAL, DIFERENTE;
-terminal SimboloAbstracto BOOLEANO, ENTERO;
-terminal SimboloAbstracto ID;
-terminal SimboloAbstracto ERROR;
+terminal AbstractSymbol PROGRAM;
+terminal AbstractSymbol PAR_I, PAR_D, LLA_I, LLA_D, COR_I, COR_D, PUNT_C, COMA;
+terminal AbstractSymbol IF, ELSE, DO, WHILE, FOR;
+terminal AbstractSymbol ASIG;
+terminal AbstractSymbol SUMA, RESTA, MULTI, DIV, MOD;
+terminal AbstractSymbol AND, OR, NOT;
+terminal AbstractSymbol MENOR, MENOR_IGUAL, MAYOR, MAYOR_IGUAL, IGUAL, DIFERENTE;
+terminal AbstractSymbol BOOLEANO, ENTERO;
+terminal AbstractSymbol ID;
+terminal AbstractSymbol ERROR;
+terminal Integer INT, BOOLEAN;
 
 //---------------------------No Terminal Definition-----------------------------
 
@@ -71,11 +73,13 @@ nonterminal ListaSentencia lista_sent;
 //--------------------------------------------------
 nonterminal Sentencia sent;
 nonterminal Declaracion sent_decl;
-nonterminal TipoVariable tipo_var;
+nonterminal Integer tipo_var;
 nonterminal Asignacion sent_asig;
 nonterminal LlamadaFuncion func_call;
+nonterminal ListaParametros opt_parm;
 nonterminal ListaParametros lista_parm;
 nonterminal Condicional sent_if;
+nonterminal ListaSentencia else;
 nonterminal RepitaHasta sent_do;
 nonterminal RepitaPara sent_for;
 //--------------------------------------------------
@@ -151,21 +155,19 @@ sent ::=			sent_decl:sd PUNT_C
 
 sent_decl ::=		tipo_var:tv variable:v  
 				{:
-					v.getNombre().setTipo(tv.getTipoVar().getTipo());
-					RESULT = new DeclSimple(tv, v, getLinea(), getColumna());
+					RESULT = new DeclSimple(tv.intValue(), v, getLinea(), getColumna());
 				:}
 				|	tipo_var:tv sent_asig:sa
 				{:
-					sa.getVariable().getNombre().setTipo(tv.getTipoVar().getTipo());
-					RESULT = new DeclCompleja(tv, sa, getLinea(), getColumna());
+					RESULT = new DeclCompleja(tv.intValue(), sa, getLinea(), getColumna());
 				:};
 tipo_var ::=		INT:i
 				{:
-					RESULT = new TipoEntero(i);
+					RESULT = i;
 				:}
 				|	BOOLEAN:b
 				{:
-					RESULT = new TipoBool(b);
+					RESULT = b;
 				:};
 
 
@@ -175,17 +177,18 @@ sent_asig ::=		variable:v ASIG:a exp:e
 				:};
 
 
-func_call ::=		ID:id PAR_I lista_parm:lp PAR_D
+func_call ::=		ID:id PAR_I opt_parm:lp PAR_D
 				{:
-					id.setTipo(SimboloAbstracto.FUNCION);
 					RESULT = new LlamadaFuncion(id, lp, id.getLinea(), id.getColumna());
-				:}
-				|	ID:id PAR_I PAR_D
-				{:
-					id.setTipo(SimboloAbstracto.FUNCION);
-					RESULT = new LlamadaFuncion(id, id.getLinea(), id.getColumna());
 				:};
-
+opt_parm ::=		lista_parm:lp
+				{:
+					RESULT = lp;
+				:}
+				|	
+				{:
+					RESULT = new ListaParametros();
+				:};
 lista_parm ::=		lista_parm:lp COMA exp:e
 				{:
 					lp.agregarElemento(e);
@@ -198,13 +201,17 @@ lista_parm ::=		lista_parm:lp COMA exp:e
 				:};
 
 
-sent_if ::=			IF:i PAR_I exp:e PAR_D LLA_I lista_sent:ls LLA_D
+sent_if ::=			IF:i PAR_I exp:e PAR_D LLA_I lista_sent:ls LLA_D else:el
 				{:
-					RESULT = new Condicional(e, ls, null, i.getLinea(), i.getColumna());
+					RESULT = new Condicional(e, ls, el, i.getLinea(), i.getColumna());
+				:};
+else ::=			ELSE LLA_I lista_sent:lse LLA_D
+				{:
+					RESULT = lse;
 				:}
-				|	IF:i PAR_I exp:e PAR_D LLA_I lista_sent:lsi LLA_D ELSE LLA_I lista_sent:lse LLA_D
+				|
 				{:
-					RESULT = new Condicional(e, lsi, lse, i.getLinea(), i.getColumna());
+					RESULT = null;
 				:};
 
 
@@ -320,11 +327,11 @@ termino ::=			PAR_I exp:e PAR_D
 
 literal ::=			ENTERO:i
 				{:
-					RESULT = new Entero(i, i.getLinea(), i.getColumna(), "positivo");
+					RESULT = new Entero(i, i.getLinea(), i.getColumna(), true);
 				:}
 				|	RESTA ENTERO:i
 				{:
-					RESULT = new Entero(i, i.getLinea(), i.getColumna(), "negativo");
+					RESULT = new Entero(i, i.getLinea(), i.getColumna(), false);
 				:}
 				|	BOOLEANO:b
 				{:
@@ -344,5 +351,5 @@ variable ::=		ID:id
 
 vector ::=			ID:id COR_I exp:e COR_D
 				{:
-					RESULT = new PosVector(TablaAbstracta.vecTabla.agregarSimbolo(id, id.getLinea(), id.getColumna()),e ,id.getLinea(), id.getColumna());
+					RESULT = new PosVector(AbstractTable.vecTabla.addSymbol(id, id.getLinea(), id.getColumna()),e ,id.getLinea(), id.getColumna());
 				:};

@@ -22,7 +22,7 @@ import thinice.TS.*;
 %eofval}
 
 %{
-	private SimboloAbstracto nombreArchivo;
+	private AbstractSymbol nombreArchivo;
 	
 	public int getLinea(){
 		return yyline+1;
@@ -41,10 +41,10 @@ import thinice.TS.*;
 	}
 
 	public void setNombreArchivo(String nombre) {
-		nombreArchivo = TablaAbstracta.texTabla.agregarSimbolo(nombre, getLinea(), getColumna());
+		nombreArchivo = AbstractTable.texTabla.addSymbol(nombre, getLinea(), getColumna());
 	}
 
-	public SimboloAbstracto getNombreArchivo() {
+	public AbstractSymbol getNombreArchivo() {
 		return nombreArchivo;
 	}
 %}
@@ -76,53 +76,53 @@ NOID					=	{NUMERO}(({letra}|{conectores}){digito}*)+
 
 <YYINITIAL>{
 
-^programa			{ return symbol(PROGRAM,		new SimboloTexto(yytext(), getLinea(), getColumna())); }
-";"					{ return symbol(PUNT_C,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-","					{ return symbol(COMA,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
+^programa			{ return symbol(PROGRAM,		new StringSymbol(yytext(), getLinea(), getColumna())); }
+";"					{ return symbol(PUNT_C,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+","					{ return symbol(COMA,			new StringSymbol(yytext(), getLinea(), getColumna())); }
 
-booleano			{ return symbol(BOOLEAN,		new SimboloTexto(yytext(), getLinea(), getColumna(), SimboloAbstracto.BOOLEANO)); }
-entero				{ return symbol(INT,			new SimboloTexto(yytext(), getLinea(), getColumna(), SimboloAbstracto.ENTERO)); }
+booleano			{ return symbol(BOOLEAN,		new Integer(AbstractSymbol.BOOLEANO)); }
+entero				{ return symbol(INT,			new Integer(AbstractSymbol.ENTERO)); }
 
-if					{ return symbol(IF,				new SimboloTexto(yytext(), getLinea(), getColumna())); }
-else				{ return symbol(ELSE,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-do					{ return symbol(DO,				new SimboloTexto(yytext(), getLinea(), getColumna())); }
-while				{ return symbol(WHILE,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-for					{ return symbol(FOR,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
+if					{ return symbol(IF,				new StringSymbol(yytext(), getLinea(), getColumna())); }
+else				{ return symbol(ELSE,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+do					{ return symbol(DO,				new StringSymbol(yytext(), getLinea(), getColumna())); }
+while				{ return symbol(WHILE,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+for					{ return symbol(FOR,			new StringSymbol(yytext(), getLinea(), getColumna())); }
 
-"("					{ return symbol(PAR_I,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-")"					{ return symbol(PAR_D,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"{"					{ return symbol(LLA_I,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"}"					{ return symbol(LLA_D,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"["					{ return symbol(COR_I,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"]"					{ return symbol(COR_D,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"("					{ return symbol(PAR_I,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+")"					{ return symbol(PAR_D,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+"{"					{ return symbol(LLA_I,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+"}"					{ return symbol(LLA_D,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+"["					{ return symbol(COR_I,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+"]"					{ return symbol(COR_D,			new StringSymbol(yytext(), getLinea(), getColumna())); }
 
-":="				{ return symbol(ASIG,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
+":="				{ return symbol(ASIG,			new StringSymbol(yytext(), getLinea(), getColumna())); }
 
-"+"					{ return symbol(SUMA,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"-"					{ return symbol(RESTA,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"*"					{ return symbol(MULTI,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"/"					{ return symbol(DIV,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-mod					{ return symbol(MOD,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"+"					{ return symbol(SUMA,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+"-"					{ return symbol(RESTA,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+"*"					{ return symbol(MULTI,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+"/"					{ return symbol(DIV,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+mod					{ return symbol(MOD,			new StringSymbol(yytext(), getLinea(), getColumna())); }
 
-Y					{ return symbol(AND,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-O					{ return symbol(OR,				new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"!"					{ return symbol(NOT,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
+Y					{ return symbol(AND,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+O					{ return symbol(OR,				new StringSymbol(yytext(), getLinea(), getColumna())); }
+"!"					{ return symbol(NOT,			new StringSymbol(yytext(), getLinea(), getColumna())); }
 
-"<"					{ return symbol(MENOR,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"<="				{ return symbol(MENOR_IGUAL,	new SimboloTexto(yytext(), getLinea(), getColumna())); }
-">"					{ return symbol(MAYOR,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-">="				{ return symbol(MAYOR_IGUAL,	new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"="					{ return symbol(IGUAL,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
-"<>"				{ return symbol(DIFERENTE,		new SimboloTexto(yytext(), getLinea(), getColumna())); }
+"<"					{ return symbol(MENOR,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+"<="				{ return symbol(MENOR_IGUAL,	new StringSymbol(yytext(), getLinea(), getColumna())); }
+">"					{ return symbol(MAYOR,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+">="				{ return symbol(MAYOR_IGUAL,	new StringSymbol(yytext(), getLinea(), getColumna())); }
+"="					{ return symbol(IGUAL,			new StringSymbol(yytext(), getLinea(), getColumna())); }
+"<>"				{ return symbol(DIFERENTE,		new StringSymbol(yytext(), getLinea(), getColumna())); }
 
-{NOID}				{ return symbol(ERROR,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
+{NOID}				{ return symbol(ERROR,			new StringSymbol(yytext(), getLinea(), getColumna())); }
 
-{BOOL}				{ return symbol(BOOLEANO,		TablaAbstracta.boolTabla.agregarSimbolo(yytext(), getLinea(), getColumna())); }
-{NUMERO}			{ return symbol(ENTERO,			TablaAbstracta.intTabla.agregarSimbolo(yytext(), getLinea(), getColumna())); }
-{IDENTIFICADOR}     { return symbol(ID,				TablaAbstracta.idTabla.agregarSimbolo(yytext(), getLinea(), getColumna())); }
+{BOOL}				{ return symbol(BOOLEANO,		AbstractTable.boolTabla.addSymbol(yytext(), getLinea(), getColumna())); }
+{NUMERO}			{ return symbol(ENTERO,			AbstractTable.intTabla.addSymbol(yytext(), getLinea(), getColumna())); }
+{IDENTIFICADOR}     { return symbol(ID,				AbstractTable.idTabla.addSymbol(yytext(), getLinea(), getColumna())); }
 
 {BLANCO}			{}
 {COMENTARIO}		{}
-.					{ return symbol(ERROR,			new SimboloTexto(yytext(), getLinea(), getColumna())); }
+.					{ return symbol(ERROR,			new StringSymbol(yytext(), getLinea(), getColumna())); }
 
 }

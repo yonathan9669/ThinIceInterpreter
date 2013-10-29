@@ -7,7 +7,7 @@ sent ->				sent_decl PUNT_C
 				|	sent_asig PUNT_C
 				|	func_call PUNT_C
 				|	sent_if
-				|	sent_do
+				|	sent_do PUNT_C
 				|	sent_for
 //------------------------------------------------------------------------------------------------------------------
 sent_decl ->		tipo_var variable

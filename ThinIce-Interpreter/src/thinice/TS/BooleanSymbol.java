@@ -1,15 +1,15 @@
 package thinice.TS;
 
-public class SimboloEntero extends SimboloAbstracto{
+public class BooleanSymbol extends AbstractSymbol{
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
-    public SimboloEntero(int indice, String texto, int linea, int columna) {
-        super(indice, texto, linea, columna, SimboloAbstracto.ENTERO);
+    public BooleanSymbol(int indice, String texto, int linea, int columna) {
+        super(indice, texto, linea, columna);
     }
     
     //---------------------------------------
-    public SimboloEntero(String texto, int linea, int columna) {
-        super(texto, linea, columna, SimboloAbstracto.ENTERO);
+    public BooleanSymbol(String texto, int linea, int columna) {
+        super(texto, linea, columna);
     }
     //---------------------------------------
     //  </editor-fold>
@@ -17,7 +17,7 @@ public class SimboloEntero extends SimboloAbstracto{
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
     @Override
     public Object clone() {
-        return new SimboloEntero(indice, texto, linea, columna);
+        return new BooleanSymbol(indice, texto, linea, columna);
     }
 
     //---------------------------------------

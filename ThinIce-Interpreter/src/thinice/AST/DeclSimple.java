@@ -9,11 +9,11 @@ public class DeclSimple extends Declaracion{
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
-    public DeclSimple(TipoVariable tipo, Variable id, int linea, int columna) {
-        super(linea, columna);
-        this.tipo = tipo;
+    public DeclSimple(int tipo, Variable id, int linea, int columna) {
+        super(tipo, linea, columna);
         this.id = id;
     }
+
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
@@ -21,9 +21,17 @@ public class DeclSimple extends Declaracion{
     public void dump(PrintStream out, int n) {
         dumpLineaColumna(out, n);
         out.println("_declaracion_simple");
-        tipo.dump(out, n+2);
+        super.dump(out, n+2);
         id.dump(out, n+2);
     }
+    
+    //---------------------------------------
+    @Override
+     public Variable getId() {
+        return id;
+    }
+    
+    //---------------------------------------
     //  </editor-fold>
     
 }

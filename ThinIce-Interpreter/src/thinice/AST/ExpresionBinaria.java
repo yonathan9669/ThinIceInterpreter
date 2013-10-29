@@ -14,4 +14,18 @@ public abstract class ExpresionBinaria extends Expresion{
         this.expr2 = expr2;
     }
     //  </editor-fold>
+    //---------------------------Getters---------------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Getters">
+    public Expresion getLeftExp(){
+        return this.expr1;
+    }
+    //---------------------------------------
+    public Expresion getRightExp(){
+        return this.expr2;
+    }
+    //  </editor-fold>
+    //---------------------------Abstract Methods------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Abstract Methods">
+    //---------------------------------------
+    //  </editor-fold>
 }

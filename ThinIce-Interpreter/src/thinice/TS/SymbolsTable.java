@@ -2,48 +2,48 @@ package thinice.TS;
 
 import java.util.Stack;
 import java.util.HashMap;
-import thinice.util.Utilidades;
+import thinice.util.Utilities;
 
-public class TablaSimbolos {
+public class SymbolsTable {
     //---------------------------Private Attributes-----------------------------
     // <editor-fold desc="Private Attributes">
-    private Stack<HashMap<SimboloAbstracto, Object>> tbl;
+    private Stack<HashMap<AbstractSymbol, Object>> tbl;
     
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
-    public TablaSimbolos() {
-        tbl = new Stack<HashMap<SimboloAbstracto, Object>>();
+    public SymbolsTable() {
+        tbl = new Stack<>();
     }
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Public Methods--------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Public Methods">
     public void crearAmbito() {
-        tbl.push(new HashMap<SimboloAbstracto, Object>());
+        tbl.push(new HashMap<AbstractSymbol, Object>());
     }
 
     //---------------------------------------
     public void quitarAmbito() {
         if (tbl.empty()) {
-            Utilidades.fatalError("salirAmbito: no se puede remover el Ã¡mbito de la tabla.");
+            Utilities.fatalError("salirAmbito: no se puede remover el Ambito de la tabla.");
         }
         tbl.pop();
     }
     
     //---------------------------------------
-    public void agregarId(SimboloAbstracto id, Object info) {
+    public void agregarId(AbstractSymbol id, Object info) {
         if (tbl.empty()) {
-            Utilidades.fatalError("agregarId: no se puede agregar id sin un Ã¡mbito.");
+            Utilities.fatalError("agregarId: no se puede agregar id sin un Ambito.");
         }
         tbl.peek().put(id, info);
     }
     
     //---------------------------------------
-    public Object buscar(SimboloAbstracto sym) {
+    public Object buscar(AbstractSymbol sym) {
         if (tbl.empty()) {
-            Utilidades.fatalError("buscar: no existen Ã¡mbitos en la tabla.");
+            Utilities.fatalError("buscar: no existen Ambitos en la tabla.");
         }
 
         for (int i = tbl.size() - 1; i >= 0; i--) {
@@ -54,22 +54,22 @@ public class TablaSimbolos {
     }
     
     //---------------------------------------
-    public Object buscarAmbitoActual(SimboloAbstracto sym) {
+    public Object buscarAmbitoActual(AbstractSymbol sym) {
         if (tbl.empty()) {
-            Utilidades.fatalError("explorar: no existen Ã¡mbitos en la tabla.");
+            Utilities.fatalError("explorar: no existen Ambitos en la tabla.");
         }
         return tbl.peek().get(sym);
     }
     
     //---------------------------------------
-    public void combinar(TablaSimbolos table) {
-		HashMap<SimboloAbstracto, Object> env = table.tbl.peek();
+    public void combinar(SymbolsTable table) {
+		HashMap<AbstractSymbol, Object> env = table.tbl.peek();
 		env.putAll(tbl.peek());
 	}
 
     //---------------------------------------
-	public TablaSimbolos copy() {
-		TablaSimbolos table = new TablaSimbolos();
+	public SymbolsTable copy() {
+		SymbolsTable table = new SymbolsTable();
 		for (int i = 0; i < tbl.size(); i++) {
 			table.crearAmbito();
 			table.tbl.peek().putAll(tbl.elementAt(i));

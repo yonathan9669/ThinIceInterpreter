@@ -17,6 +17,15 @@ public class ListaSentencia extends NodoLista<Sentencia>{
             s.dump(out, n);
         }
     }
+    
+    //---------------------------------------
+    @Override
+    public void aceptar(Visitor visit, Object... params) {
+        for (Sentencia sentencia : this.getLista()) {
+            sentencia.aceptar(visit, params);
+        }
+    }
+    
     //---------------------------------------
     //  </editor-fold>
 }

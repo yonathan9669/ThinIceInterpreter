@@ -1,7 +1,7 @@
 package thinice.AST;
 
 import java.io.PrintStream;
-import thinice.util.Utilidades;
+import thinice.util.Utilities;
 
 public class RepitaHasta extends Sentencia{
     //---------------------------Protected Attributes-----------------------------
@@ -19,6 +19,22 @@ public class RepitaHasta extends Sentencia{
     
     //---------------------------------------
     //  </editor-fold>
+    //---------------------------Getters---------------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Getters">
+    public Expresion getCondicion() {
+        return condicion;
+    }
+    
+    //---------------------------------------
+    public ListaSentencia getSentencias() {
+        return sentencias;
+    }
+    
+    //  </editor-fold>
+    //---------------------------Public Methods--------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Public Methods">
+    //---------------------------------------
+    //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
     @Override
@@ -26,9 +42,17 @@ public class RepitaHasta extends Sentencia{
         dumpLineaColumna(out, n);
         out.println("_repita-hasta");
         condicion.dump(out, n+2);
-        out.println(Utilidades.pad(n+2) + "_sentencias");
+        out.println(Utilities.pad(n+2) + "_sentencias");
         sentencias.dump(out, n+4);
     }
+    
+    //---------------------------------------
+    @Override
+    public void aceptar(Visitor visit, Object... params) {
+        visit.visitar(this, params);
+    }
+    
+    //---------------------------------------
     //  </editor-fold>
     
 }

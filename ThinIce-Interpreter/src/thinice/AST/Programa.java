@@ -13,6 +13,15 @@ public class Programa extends NodoArbol {
         super(linea, columna);
         this.sentencias = sentencias;
     }
+
+    //  </editor-fold>
+    //---------------------------Getters---------------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Getters">
+    public ListaSentencia getSentencias() {
+        return sentencias;
+    }
+    
+    //---------------------------------------
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
@@ -22,6 +31,12 @@ public class Programa extends NodoArbol {
         dumpLineaColumna(out, n);
         out.println("_programa");
         sentencias.dump(out, n + 2);
+    }
+    
+    //---------------------------------------
+    @Override
+    public void aceptar(Visitor visit, Object... params) {
+        visit.visitar(this, params);
     }
     //---------------------------------------
     //  </editor-fold>
