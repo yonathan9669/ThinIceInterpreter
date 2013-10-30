@@ -14,8 +14,16 @@ public abstract class Constante extends Expresion{
         super(linea, columna);
         this.token = token;
     }
-    //  </editor-fold>
 
+    //  </editor-fold>
+    //---------------------------Getters---------------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Getters">
+    public AbstractSymbol getToken() {
+        return token;
+    }
+    
+    //---------------------------------------
+    //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
     @Override

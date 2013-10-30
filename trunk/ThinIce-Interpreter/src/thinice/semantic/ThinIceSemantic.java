@@ -52,7 +52,7 @@ public class ThinIceSemantic {
         this.table = semantVisitor.getTable();
         this.addKernelFuntions();
         
-        this.program.aceptar(semantVisitor, "Programa");
+        this.program.aceptar(semantVisitor, true);
         
         return SemantErrorReport.getInstancia().errores;
     }

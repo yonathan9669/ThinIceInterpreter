@@ -6,6 +6,7 @@ public abstract class Expresion extends NodoArbol{
     //---------------------------Package Attributes-----------------------------
     // <editor-fold desc="Private Attributes">
     AbstractSymbol tipo_expr;
+    Object value;
 
     //  </editor-fold>
     //---------------------------Setters---------------------------------------- 
@@ -15,6 +16,10 @@ public abstract class Expresion extends NodoArbol{
     }
     
     //---------------------------------------
+    public void setValue(Object value) {
+        this.value = value;
+    }
+    
     //  </editor-fold>
     //---------------------------Getters---------------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Getters">
@@ -23,6 +28,10 @@ public abstract class Expresion extends NodoArbol{
     }
     
     //---------------------------------------
+    public Object getValue() {
+        return value;
+    }
+    
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">

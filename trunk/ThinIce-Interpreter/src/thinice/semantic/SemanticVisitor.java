@@ -45,15 +45,23 @@ public class SemanticVisitor implements Visitor {
     protected static final int incorrectParameters = 7;
     protected static final int wrongVariableType = 8;
     //---------------------------------------
+    protected static final int declaration = 0;
+    protected static final int asignation = 1;
+    protected static final int valueGet = 2;
+    //---------------------------------------
+    protected static final int indexOutOfBounds = 0;
+    protected static final int notPossitiveIndex = 1;
+    protected static final int notInicialized = 2;
     //  </editor-fold>
     //---------------------------Private Attributes-----------------------------
     // <editor-fold desc="Private Attributes">
     private SymbolsTable table;
-
+    private boolean genCode;
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
+
     public SemanticVisitor() {
         this.table = new SymbolsTable();
         this.table.crearAmbito();
@@ -75,7 +83,7 @@ public class SemanticVisitor implements Visitor {
     //---------------------------Private Methods-------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Private Methods">
 
-    private boolean addError(int error, Object... params) {
+    private boolean addSemanticError(int error, Object... params) {
         boolean isError = false;
         int type = 1;
 
@@ -165,26 +173,87 @@ public class SemanticVisitor implements Visitor {
             case wrongVariableType:
                 int declaredVariable = (params[0] instanceof PosVector) ? 1 : -1;
                 int usedVariable = (params[1] instanceof PosVector) ? 1 : -1;
-                
-                if(declaredVariable != usedVariable){
-                    SemantErrorReport.getInstancia().semantError((Variable)params[1],
+
+                if (declaredVariable != usedVariable) {
+                    SemantErrorReport.getInstancia().semantError((Variable) params[1],
                             "Uso incorrecto del IDENTIFICADOR \""
-                            + ((Variable)params[0]).getNombre().getTexto()
+                            + ((Variable) params[0]).getNombre().getTexto()
                             + "\" en la expresion \""
-                            + ((Variable)params[1]).getTextExpression()
+                            + ((Variable) params[1]).getTextExpression()
                             + "\". Se intenta usar como "
-                            + ((usedVariable == 1) ? "Vector":"Variable")
+                            + ((usedVariable == 1) ? "Vector" : "Variable")
                             + " pero fue declarada como "
-                            + ((declaredVariable == 1) ? "Vector":"Variable"));
+                            + ((declaredVariable == 1) ? "Vector" : "Variable"));
                     isError = true;
                 }
-                
+
                 break;
-                    
+
         }
+
+        if (genCode && isError) {
+            genCode = false;
+        }
+
         return isError;
     }
     //---------------------------------------
+
+    private boolean addRuntimeError(int error, Object... params) {
+        boolean isError = false;
+
+        switch (error) {
+            case indexOutOfBounds:
+                PosVector declaredVec = (PosVector) params[0];
+                PosVector usedVec = (PosVector) params[1];
+
+                int pos = usedVec.getPos();
+
+                if (declaredVec.getSize() >= pos || pos < 0) {
+                    SemantErrorReport.getInstancia().semantError(usedVec.getExp(),
+                            "El indice usado en la expresion"
+                            + usedVec.getTextExpression()
+                            + "esta fuera de los limites del vector declarado \""
+                            + declaredVec.getNombre().getTexto()
+                            + " -> TAMAÑO [" + declaredVec.getSize() + "]\" Pos -> "
+                            + usedVec.getExp().getValue());
+                    isError = true;
+                }
+                break;
+            case notPossitiveIndex:
+                PosVector vec = (PosVector) params[0];
+                int size = vec.getPos();
+
+                if (size < 1) {
+                    SemantErrorReport.getInstancia().semantError(vec.getExp(),
+                            "El valor usado en la declaracion de un vector debe ser MAYOR a 0 \""
+                            + vec.getTextExpression()
+                            + "\" Valor Expresion -> \""
+                            + size
+                            + "\"");
+                    isError = true;
+                }
+                break;
+            case notInicialized:
+                Variable var = (Variable) params[0];
+
+                if (var.getValue() == null) {
+                    SemantErrorReport.getInstancia().semantError(var,
+                            "La variable NUNCA fue INICIALIZADA \""
+                            + var.getTextExpression()
+                            + " -> " + var.getValue()
+                            + "\"");
+                    isError = true;
+                }
+                break;
+        }
+
+        if (genCode && isError) {
+            genCode = false;
+        }
+
+        return isError;
+    }
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold desc="Override Methods">
@@ -193,6 +262,7 @@ public class SemanticVisitor implements Visitor {
 
     @Override
     public void visitar(Programa element, Object... params) {
+        this.genCode = (boolean) params[0];
         element.getSentencias().aceptar(this, params);
     }
 
@@ -207,13 +277,13 @@ public class SemanticVisitor implements Visitor {
         Object id = table.buscar(element.getId().getNombre());
         int declareType = (element.getId() instanceof PosVector) ? declaringVector : declaringVariable;
 
-        if (id == null || (!addError(reservedWords, id, element) && !addError(declareType, id, element))) {
+        if (id == null || (!addSemanticError(reservedWords, id, element) && !addSemanticError(declareType, id, element))) {
             Variable var = element.getId();
             var.getNombre().setTipo(element.getTipo());
 
             table.agregarId(var.getNombre(), var);
 
-            var.aceptar(this, params);
+            var.aceptar(this, declaration);
         }
 
         if (element instanceof DeclCompleja) {
@@ -232,7 +302,7 @@ public class SemanticVisitor implements Visitor {
         element.getVariable().aceptar(this, params);
         element.getExpr().aceptar(this, params);
 
-        if (var != null && !addError(invalidEpressionType, var, element.getExpr())) {
+        if (var != null && !addSemanticError(invalidEpressionType, var, element.getExpr())) {
             //la variable esta declarada y los tipos concuerdan para la asignacion
         }
     }
@@ -242,16 +312,16 @@ public class SemanticVisitor implements Visitor {
     public void visitar(LlamadaFuncion element, Object... params) {
         Object fun = table.buscar(element.getId());
 
-        if (!addError(functionNotDefined, fun, element)) {
+        if (!addSemanticError(functionNotDefined, fun, element)) {
             element.getParams().aceptar(this, params);
 
-            if (!addError(incorrectParameters, fun, element)) {
+            if (!addSemanticError(incorrectParameters, fun, element)) {
                 ArrayList<ParamFormal> lp = ((FuncionDef) fun).getParametros().getLista();
                 for (int i = 0; i < lp.size(); i++) {
                     ParamFormal paramFormal = lp.get(i);
                     Expresion param = element.getParams().getLista().get(i);
 
-                    if (addError(invalidEpressionType, paramFormal.getTipo().getTipo(), param)) {
+                    if (addSemanticError(invalidEpressionType, paramFormal.getTipo().getTipo(), param)) {
                         //si alguno de los parametros no es de tipo valido
                         break;
                     }
@@ -266,6 +336,7 @@ public class SemanticVisitor implements Visitor {
     // <editor-fold defaultstate="collapsed" desc="Block Sentences Visitor CALL">
     @Override
     public void visitar(Condicional element, Object... params) {
+        this.table.crearAmbito();
         element.getCondicion().aceptar(this, params);
         element.getEntonces().aceptar(this, params);
 
@@ -273,32 +344,37 @@ public class SemanticVisitor implements Visitor {
             element.getSino().aceptar(this, params);
         }
 
-        if (!addError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getCondicion())) {
+        if (!addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getCondicion())) {
             //si la condicion es de tipo bool
         }
+        this.table.quitarAmbito();
     }
 
     //---------------------------------------
     @Override
     public void visitar(RepitaHasta element, Object... params) {
+        this.table.crearAmbito();
         element.getSentencias().aceptar(this, params);
         element.getCondicion().aceptar(this, params);
 
-        if (!addError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getCondicion())) {
+        if (!addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getCondicion())) {
             //si la condicion es de tipo bool
         }
+        this.table.quitarAmbito();
     }
 
     //---------------------------------------
     @Override
     public void visitar(RepitaPara element, Object... params) {
+        this.table.crearAmbito();
         element.getInicialization().aceptar(this, params);
         element.getStep().aceptar(this, params);
         element.getCondicion().aceptar(this, params);
 
-        if (!addError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getCondicion())) {
+        if (!addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getCondicion())) {
             //si la condicion es de tipo bool
         }
+        this.table.quitarAmbito();
     }
 
     //---------------------------------------
@@ -317,8 +393,8 @@ public class SemanticVisitor implements Visitor {
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.BOOLEANO];
 
-        if (!addError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getLeftExp())
-                && !addError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getRightExp())) {
+        if (!addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getLeftExp())
+                && !addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getRightExp())) {
             //si ambas expresiones son de tipo boolean
             //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
         }
@@ -334,8 +410,8 @@ public class SemanticVisitor implements Visitor {
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.BOOLEANO];
 
-        if (!addError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getLeftExp())
-                && !addError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getRightExp())) {
+        if (!addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getLeftExp())
+                && !addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getRightExp())) {
             //si ambas expresiones son de tipo boolean
             //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
         }
@@ -350,7 +426,7 @@ public class SemanticVisitor implements Visitor {
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.BOOLEANO];
 
-        if (!addError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getExpr())) {
+        if (!addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getExpr())) {
             //si la expresion es booleana
             //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
         }
@@ -368,7 +444,7 @@ public class SemanticVisitor implements Visitor {
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.BOOLEANO];
 
-        if (!addError(invalidEpressionType, element.getLeftExp(), element.getRightExp())) {
+        if (!addSemanticError(invalidEpressionType, element.getLeftExp(), element.getRightExp())) {
             //si ambas expresiones son del mismo tipo
             //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
         }
@@ -386,8 +462,8 @@ public class SemanticVisitor implements Visitor {
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
-        if (!addError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
-                && !addError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
+        if (!addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
+                && !addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
             //si ambas expresiones son de tipo entero
             //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
         }
@@ -403,8 +479,8 @@ public class SemanticVisitor implements Visitor {
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
-        if (!addError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
-                && !addError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
+        if (!addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
+                && !addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
             //si ambas expresiones son de tipo entero
             //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
         }
@@ -420,8 +496,8 @@ public class SemanticVisitor implements Visitor {
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
-        if (!addError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
-                && !addError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
+        if (!addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
+                && !addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
             //si ambas expresiones son de tipo entero
             //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
         }
@@ -437,8 +513,8 @@ public class SemanticVisitor implements Visitor {
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
-        if (!addError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
-                && !addError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
+        if (!addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
+                && !addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
             //si ambas expresiones son de tipo entero
             //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
         }
@@ -454,8 +530,8 @@ public class SemanticVisitor implements Visitor {
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
-        if (!addError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
-                && !addError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
+        if (!addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
+                && !addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
             //si ambas expresiones son de tipo entero
             //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
         }
@@ -471,12 +547,22 @@ public class SemanticVisitor implements Visitor {
     @Override
     public void visitar(Entero element, Object... params) {
         element.setTipo_expr(LenguageKernel.symbolType[AbstractSymbol.ENTERO]);
+
+        //Seccion de generacion de codigo y ejecucion
+        if (genCode && (int) params[0] == valueGet) {
+            element.setValue(Integer.getInteger(element.getIntValue()));
+        }
     }
 
     //---------------------------------------
     @Override
     public void visitar(Booleano element, Object... params) {
         element.setTipo_expr(LenguageKernel.symbolType[AbstractSymbol.BOOLEANO]);
+
+        //Seccion de generacion de codigo y ejecucion
+        if (genCode && (int) params[0] == valueGet) {
+            element.setValue(Boolean.valueOf(element.getToken().getTexto()));
+        }
     }
 
     //---------------------------------------
@@ -484,30 +570,47 @@ public class SemanticVisitor implements Visitor {
     public void visitar(Variable element, Object... params) {
         Object sym = table.buscar(element.getNombre());
 
-        int type = (!addError(variableNotDeclared, sym, element) &&
-                    !addError(wrongVariableType, sym, element) && 
-                    !addError(reservedWords, sym, element))
+        int type = (!addSemanticError(variableNotDeclared, sym, element)
+                && !addSemanticError(wrongVariableType, sym, element)
+                && !addSemanticError(reservedWords, sym, element))
                 ? ((Variable) sym).getNombre().getTipo() : AbstractSymbol.NOTYPE;
 
         element.setTipo_expr(LenguageKernel.symbolType[type]);
-    }
 
+        //Seccion de generacion de codigo y ejecucion
+        if (genCode) {
+            Variable var = (Variable) sym;
+            if ((int) params[0] == declaration) {
+                var.setValue(null);
+            } else if ((int) params[0] == valueGet) {
+                element.setValue(var.getValue());
+            }
+        }
+    }
     //---------------------------------------
+
     @Override
     public void visitar(PosVector element, Object... params) {
         Object sym = table.buscar(element.getNombre());
 
-        int type = (!addError(vectorNotDeclared, sym, element) &&
-                    !addError(wrongVariableType, sym, element) && 
-                    !addError(reservedWords, sym, element))
+        int type = (!addSemanticError(vectorNotDeclared, sym, element)
+                && !addSemanticError(wrongVariableType, sym, element)
+                && !addSemanticError(reservedWords, sym, element))
                 ? ((PosVector) sym).getNombre().getTipo() : AbstractSymbol.NOTYPE;
 
         element.setTipo_expr(LenguageKernel.symbolType[type]);
 
-        element.getExp().aceptar(this, params);
+        element.getExp().aceptar(this, valueGet);
 
-        if (!addError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getExp())) {
-            //si la expresion es correcta
+        //Seccion de generacion de codigo y ejecucion
+        if (!addSemanticError(invalidEpressionType, new Integer(AbstractSymbol.ENTERO), element.getExp()) && genCode) {
+            PosVector vec = (PosVector) sym;
+            int pos = element.getPos();
+            if ((int) params[0] == declaration && !addRuntimeError(notPossitiveIndex, element)) {
+                vec.initVector(pos);
+            } else if ((int) params[0] == valueGet && !addRuntimeError(indexOutOfBounds, vec, element.getExp())) {
+                element.setValue(vec.getPosValue(pos));
+            }
         }
     }
     //  </editor-fold>
