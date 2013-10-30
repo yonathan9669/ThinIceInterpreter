@@ -24,7 +24,7 @@ public class LexerTester {
                 FileReader f = new FileReader(file);
                 char[] buf = new char[1024];
                 int n = f.read(buf);
-                
+
                 if (n > 0) {
                     System.out.println(new String(buf, 0, n));
                 }
