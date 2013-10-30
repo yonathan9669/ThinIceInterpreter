@@ -2,7 +2,6 @@ package thinice.semantic;
 
 import thinice.AST.FuncionDef;
 import thinice.AST.Programa;
-import thinice.AST.Visitor;
 import thinice.TS.SymbolsTable;
 import thinice.util.LenguageKernel;
 

@@ -81,10 +81,10 @@ public class SemanticVisitor implements Visitor {
 
         switch (error) {
             case reservedWords:
-                if (params[0] instanceof LlamadaFuncion) {
-                    LlamadaFuncion f = (LlamadaFuncion) params[0];
+                if (params[0] instanceof FuncionDef) {
+                    FuncionDef f = (FuncionDef) params[0];
                     SemantErrorReport.getInstancia().semantError(((NodoArbol) params[1]),
-                            " \"" + f.getId().getTexto() + "\" es una funcion definida en "
+                            " \"" + f.getTextFunctionDef() + "\" es una funcion definida en "
                             + "el sistema y no se pueden declarar variables con palabras "
                             + "RESERVADAS");
                     isError = true;
@@ -211,7 +211,7 @@ public class SemanticVisitor implements Visitor {
             Variable var = element.getId();
             var.getNombre().setTipo(element.getTipo());
 
-            table.agregarId(element.getId().getNombre(), var);
+            table.agregarId(var.getNombre(), var);
 
             var.aceptar(this, params);
         }
