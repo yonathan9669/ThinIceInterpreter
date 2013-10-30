@@ -1,10 +1,10 @@
 programa(){
 	//Prueba de Error Semantico (Vector no Declarado) (Variable no Declarada)
-	//vec[x + 4/-2] := 10 - 1;
+	vec[x + 4/-2] := 10 - 1;
 	entero x := -1;
 	booleano vec[10];
 
-	//mirrarArriba();
+	mirrarArriba();
 
 	if(x = 1){
 		entero y := x + -2;
@@ -12,11 +12,11 @@ programa(){
 		if(y <= 3 O y > 0){
 			//Prueba de Error Sintactico (Asignacion no Valida)
 			//y := avanzar(5 + x);
-			//y := -1;
+			y := -1;
 			x := 36;
 		}
 		else{
-			vec[x + 4/2] := y + 10 + 1;
+			vec[x + 4/2] := x[1] + 10 + 1;
 			avanzar((y * x / 4 + 1 ), true);
 		}
 		entero vec[1];
