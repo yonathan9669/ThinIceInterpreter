@@ -30,6 +30,40 @@ public class Relacionales extends ExpresionBinaria {
         this.type = TIPO;
     }
     //  </editor-fold>
+    //---------------------------Getters-----------------------------
+    // <editor-fold desc="Getters">
+    public int getType(){
+        return type;
+    }
+    //---------------------------------------
+    //  </editor-fold>
+    //---------------------------Public Methods--------------------------------- 
+    // <editor-fold defaultstate="collapsed" desc="Public Methods">
+    public boolean getExpressionResult(boolean isBool){
+        switch(type){
+            case IGUAL:
+                if(isBool)
+                    return ((Boolean)this.expr1.getValue()).booleanValue() == ((Boolean)this.expr2.getValue()).booleanValue();
+                else
+                    return ((Integer)this.expr1.getValue()).intValue() == ((Integer)this.expr2.getValue()).intValue();
+            case DIFERENTE:
+                if(isBool)
+                    return ((Boolean)this.expr1.getValue()).booleanValue() != ((Boolean)this.expr2.getValue()).booleanValue();
+                else
+                    return ((Integer)this.expr1.getValue()).intValue() != ((Integer)this.expr2.getValue()).intValue();
+            case MENOR:
+                return ((Integer)this.expr1.getValue()).intValue() < ((Integer)this.expr2.getValue()).intValue();
+            case MENOR_IGUAL:
+                return ((Integer)this.expr1.getValue()).intValue() <= ((Integer)this.expr2.getValue()).intValue();
+            case MAYOR:
+                return ((Integer)this.expr1.getValue()).intValue() > ((Integer)this.expr2.getValue()).intValue();
+            case MAYOR_IGUAL:
+                return ((Integer)this.expr1.getValue()).intValue() >= ((Integer)this.expr2.getValue()).intValue();
+        }
+        return false;
+    }
+    //---------------------------------------
+    //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
 
