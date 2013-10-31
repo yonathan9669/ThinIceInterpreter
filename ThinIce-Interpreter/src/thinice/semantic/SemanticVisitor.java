@@ -53,6 +53,7 @@ public class SemanticVisitor implements Visitor {
     protected static final int indexOutOfBounds = 0;
     protected static final int notPossitiveIndex = 1;
     protected static final int notInicialized = 2;
+    protected static final int zeroDivide = 3;
     //  </editor-fold>
     //---------------------------Private Attributes-----------------------------
     // <editor-fold desc="Private Attributes">
@@ -247,6 +248,14 @@ public class SemanticVisitor implements Visitor {
                     isError = true;
                 }
                 break;
+            case zeroDivide:
+                Integer right = (Integer) ((Expresion) params[0]).getValue();
+                if (right.intValue() == 0) {
+                    SemantErrorReport.getInstancia().semantError((Expresion) params[0],
+                            "Error de division entre cero");
+                    isError = true;
+                }
+                break;
         }
 
         if (genCode && isError) {
@@ -423,15 +432,17 @@ public class SemanticVisitor implements Visitor {
     // <editor-fold defaultstate="collapsed" desc="Logical Binary Expressions">
     @Override
     public void visitar(And element, Object... params) {
-        element.getLeftExp().aceptar(this, params);
-        element.getRightExp().aceptar(this, params);
+        element.getLeftExp().aceptar(this, getValue);
+        element.getRightExp().aceptar(this, getValue);
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.BOOLEANO];
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getLeftExp())
-                && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getRightExp())) {
-            //si ambas expresiones son de tipo boolean
-            //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
+                && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getRightExp())
+                && genCode && (int)params[0] == getValue) {
+            Boolean izq = (Boolean)element.getLeftExp().getValue();
+            Boolean der = (Boolean)element.getRightExp().getValue();
+            element.setValue(Boolean.valueOf(izq.booleanValue() && der.booleanValue()));
         }
 
         element.setTipo_expr(type);
@@ -440,15 +451,17 @@ public class SemanticVisitor implements Visitor {
     //---------------------------------------
     @Override
     public void visitar(Or element, Object... params) {
-        element.getLeftExp().aceptar(this, params);
-        element.getRightExp().aceptar(this, params);
+        element.getLeftExp().aceptar(this, getValue);
+        element.getRightExp().aceptar(this, getValue);
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.BOOLEANO];
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getLeftExp())
-                && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getRightExp())) {
-            //si ambas expresiones son de tipo boolean
-            //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
+                && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getRightExp())
+                && genCode && (int)params[0] == getValue) {
+            Boolean izq = (Boolean)element.getLeftExp().getValue();
+            Boolean der = (Boolean)element.getRightExp().getValue();
+            element.setValue(Boolean.valueOf(izq.booleanValue() || der.booleanValue()));
         }
 
         element.setTipo_expr(type);
@@ -457,13 +470,14 @@ public class SemanticVisitor implements Visitor {
     //---------------------------------------
     @Override
     public void visitar(Not element, Object... params) {
-        element.getExpr().aceptar(this, params);
+        element.getExpr().aceptar(this, getValue);
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.BOOLEANO];
 
-        if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getExpr())) {
-            //si la expresion es booleana
-            //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
+        if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getExpr())
+                && genCode && (int)params[0] == getValue) {
+            Boolean not = (Boolean)element.getExpr().getValue();
+            element.setValue(Boolean.valueOf(!not.booleanValue()));
         }
 
         element.setTipo_expr(type);
@@ -501,15 +515,18 @@ public class SemanticVisitor implements Visitor {
 
     @Override
     public void visitar(Suma element, Object... params) {
-        element.getLeftExp().aceptar(this, params);
-        element.getRightExp().aceptar(this, params);
+        element.getLeftExp().aceptar(this, getValue);
+        element.getRightExp().aceptar(this, getValue);
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
                 && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
-            //si ambas expresiones son de tipo entero
-            //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
+            if (genCode && (int) params[0] == getValue) {
+                Integer left = (Integer) element.getLeftExp().getValue();
+                Integer right = (Integer) element.getRightExp().getValue();
+                element.setValue(new Integer(left + right));
+            }
         }
 
         element.setTipo_expr(type);
@@ -518,15 +535,18 @@ public class SemanticVisitor implements Visitor {
     //---------------------------------------
     @Override
     public void visitar(Resta element, Object... params) {
-        element.getLeftExp().aceptar(this, params);
-        element.getRightExp().aceptar(this, params);
+        element.getLeftExp().aceptar(this, getValue);
+        element.getRightExp().aceptar(this, getValue);
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
                 && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
-            //si ambas expresiones son de tipo entero
-            //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
+            if (genCode && (int) params[0] == getValue) {
+                Integer left = (Integer) element.getLeftExp().getValue();
+                Integer right = (Integer) element.getRightExp().getValue();
+                element.setValue(new Integer(left - right));
+            }
         }
 
         element.setTipo_expr(type);
@@ -535,15 +555,18 @@ public class SemanticVisitor implements Visitor {
     //---------------------------------------
     @Override
     public void visitar(Multiplicacion element, Object... params) {
-        element.getLeftExp().aceptar(this, params);
-        element.getRightExp().aceptar(this, params);
+        element.getLeftExp().aceptar(this, getValue);
+        element.getRightExp().aceptar(this, getValue);
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
                 && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
-            //si ambas expresiones son de tipo entero
-            //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
+            if (genCode && (int) params[0] == getValue) {
+                Integer left = (Integer) element.getLeftExp().getValue();
+                Integer right = (Integer) element.getRightExp().getValue();
+                element.setValue(new Integer(left * right));
+            }
         }
 
         element.setTipo_expr(type);
@@ -552,15 +575,18 @@ public class SemanticVisitor implements Visitor {
     //---------------------------------------
     @Override
     public void visitar(Division element, Object... params) {
-        element.getLeftExp().aceptar(this, params);
-        element.getRightExp().aceptar(this, params);
+        element.getLeftExp().aceptar(this, getValue);
+        element.getRightExp().aceptar(this, getValue);
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
                 && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
-            //si ambas expresiones son de tipo entero
-            //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
+            if (genCode && (int) params[0] == getValue && !addRuntimeError(zeroDivide, element.getRightExp())) {
+                Integer left = (Integer) element.getLeftExp().getValue();
+                Integer right = (Integer) element.getRightExp().getValue();
+                element.setValue(new Integer(left / right));
+            }
         }
 
         element.setTipo_expr(type);
@@ -569,15 +595,18 @@ public class SemanticVisitor implements Visitor {
     //---------------------------------------
     @Override
     public void visitar(Modulo element, Object... params) {
-        element.getLeftExp().aceptar(this, params);
-        element.getRightExp().aceptar(this, params);
+        element.getLeftExp().aceptar(this, getValue);
+        element.getRightExp().aceptar(this, getValue);
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
                 && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
-            //si ambas expresiones son de tipo entero
-            //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
+            if (genCode && (int) params[0] == getValue && !addRuntimeError(zeroDivide, element.getRightExp())) {
+                Integer left = (Integer) element.getLeftExp().getValue();
+                Integer right = (Integer) element.getRightExp().getValue();
+                element.setValue(new Integer(left % right));
+            }
         }
 
         element.setTipo_expr(type);
