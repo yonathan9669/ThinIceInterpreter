@@ -65,6 +65,10 @@ public class SemantErrorReport {
     }
     
     //---------------------------------------
+    public void resetErrors(){
+	errores = 0;
+	errorStream = System.err;
+    }
     //  </editor-fold>
     
 }

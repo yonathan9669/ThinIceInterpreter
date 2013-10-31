@@ -2,13 +2,19 @@ programa(){
 
     entero vec[10];
     entero z := - 3 mod - 4 / -5 + -5;
-    entero x;
+    entero x := 1;
 	booleano y := true;
 	
 	y := (x + 2 >= 1) Y (x * 2 <= 7);
 
 	avanzar(1 + x);
 	mirarArriba();
+
+	entero i;
+
+	for(i :=0 ; i := i + 1 ; i < 10){
+		vec[i] := (i+1)*2;
+	}
 
 	y := !y;
 	x := x+4;

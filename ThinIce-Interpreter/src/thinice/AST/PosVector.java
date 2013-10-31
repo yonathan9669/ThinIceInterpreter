@@ -35,7 +35,7 @@ public class PosVector extends Variable {
 
     //---------------------------------------
     public int getPos() {
-        return Integer.parseInt((String) this.exp.getValue());
+        return Integer.parseInt(this.exp.getValue().toString());
     }
 
     //---------------------------------------
@@ -56,6 +56,15 @@ public class PosVector extends Variable {
         this.value = vec;
     }
     //---------------------------------------
+    public void setPosValue(Object value, Expresion pos){
+        int i = ((Integer)pos.getValue()).intValue();
+        setPosValue(value, i);
+    }
+    
+    //---------------------------------------
+    public void setPosValue(Object value, int i){
+        ((ArrayList)this.value).set(i, value);
+    }
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
