@@ -1,5 +1,6 @@
 package thinice.semantic;
 
+import Game.interpreterInput;
 import java.util.ArrayList;
 import thinice.AST.And;
 import thinice.AST.Asignacion;
@@ -31,7 +32,7 @@ import thinice.TS.AbstractSymbol;
 import thinice.TS.SymbolsTable;
 import thinice.util.LenguageKernel;
 
-public class SemanticVisitor implements Visitor {
+public class MIMOVisitor implements Visitor {
     //---------------------------Static Constants-------------------------------
     // <editor-fold desc="Static Constants">
 
@@ -49,11 +50,15 @@ public class SemanticVisitor implements Visitor {
     protected static final int asignation = 1;
     protected static final int getValue = 2;
     protected static final int execution = 3;
+    protected static final int notExecution = 4;
     //---------------------------------------
     protected static final int indexOutOfBounds = 0;
     protected static final int notPossitiveIndex = 1;
     protected static final int notInicialized = 2;
     protected static final int zeroDivide = 3;
+    //---------------------------------------
+    protected static final String sematicErrorText = "(Semantico) -> ";
+    protected static final String runTimeErrorText = "(Tiempo de Ejecucion) -> ";
     //  </editor-fold>
     //---------------------------Private Attributes-----------------------------
     // <editor-fold desc="Private Attributes">
@@ -64,7 +69,7 @@ public class SemanticVisitor implements Visitor {
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
 
-    public SemanticVisitor() {
+    public MIMOVisitor() {
         this.table = new SymbolsTable();
         this.table.crearAmbito();
     }
@@ -94,7 +99,8 @@ public class SemanticVisitor implements Visitor {
                 if (params[0] instanceof FuncionDef) {
                     FuncionDef f = (FuncionDef) params[0];
                     SemantErrorReport.getInstancia().semantError(((NodoArbol) params[1]),
-                            " \"" + f.getTextFunctionDef() + "\" es una funcion definida en "
+                            sematicErrorText
+                            + " \"" + f.getTextFunctionDef() + "\" es una funcion definida en "
                             + "el sistema y no se pueden declarar variables con palabras "
                             + "RESERVADAS");
                     isError = true;
@@ -107,7 +113,8 @@ public class SemanticVisitor implements Visitor {
                 if (params[0] instanceof Variable) {
                     Variable vId = (Variable) params[0];
                     SemantErrorReport.getInstancia().semantError(((Declaracion) params[1]).getId(),
-                            ((type == 0) ? "La variable" : "El vector") + " \""
+                            sematicErrorText
+                            + ((type == 0) ? "La variable" : "El vector") + " \""
                             + vId.getNombre().getTexto()
                             + "\" ya se declaro en la linea:columna #["
                             + vId.getNombre().getLinea() + ":"
@@ -124,7 +131,8 @@ public class SemanticVisitor implements Visitor {
                 if (params[0] == null) {
                     Variable vId = ((Variable) params[1]);
                     SemantErrorReport.getInstancia().semantError(vId,
-                            ((type == 0) ? "La variable" : "El vector")
+                            sematicErrorText
+                            + ((type == 0) ? "La variable" : "El vector")
                             + " \"" + vId.getNombre().getTexto()
                             + "\" NUNCA se DECLARO");
                     isError = true;
@@ -140,7 +148,8 @@ public class SemanticVisitor implements Visitor {
 
                 if (requiredType != expressionType) {
                     SemantErrorReport.getInstancia().semantError(((NodoArbol) params[1]),
-                            "Error en el tipo de expresion, se requiere un \""
+                            sematicErrorText
+                            + "Error en el tipo de expresion, se requiere un \""
                             + AbstractSymbol.nombreTipo[requiredType]
                             + "\" y la expresion"
                             + ((params[1] instanceof Expresion) ? " \"" + ((Expresion) params[1]).getTextExpression() + "\" " : " ")
@@ -154,7 +163,8 @@ public class SemanticVisitor implements Visitor {
                 if (params[0] == null || !(params[0] instanceof FuncionDef)) {
                     LlamadaFuncion f = (LlamadaFuncion) params[1];
                     SemantErrorReport.getInstancia().semantError(f,
-                            "El identificador \""
+                            sematicErrorText
+                            + "El identificador \""
                             + f.getId().getTexto()
                             + "\" no es una funcion valida o definida en el sistema");
                     isError = true;
@@ -165,7 +175,8 @@ public class SemanticVisitor implements Visitor {
                 LlamadaFuncion fc = (LlamadaFuncion) params[1];
                 if (fd.getParametros().getLista().size() != fc.getParams().getLista().size()) {
                     SemantErrorReport.getInstancia().semantError(fc,
-                            "La SINTAXIS de la funcion es \""
+                            sematicErrorText
+                            + "La SINTAXIS de la funcion es \""
                             + fd.getTextFunctionDef()
                             + "\" y no coincide con "
                             + fc.getTextFunction());
@@ -178,7 +189,8 @@ public class SemanticVisitor implements Visitor {
 
                 if (declaredVariable != usedVariable) {
                     SemantErrorReport.getInstancia().semantError((Variable) params[1],
-                            "Uso incorrecto del IDENTIFICADOR \""
+                            sematicErrorText
+                            + "Uso incorrecto del IDENTIFICADOR \""
                             + ((Variable) params[0]).getNombre().getTexto()
                             + "\" en la expresion \""
                             + ((Variable) params[1]).getTextExpression()
@@ -195,6 +207,7 @@ public class SemanticVisitor implements Visitor {
 
         if (genCode && isError) {
             genCode = false;
+            interpreterInput.getInstance().clearQueue();
         }
 
         return isError;
@@ -211,11 +224,12 @@ public class SemanticVisitor implements Visitor {
 
                 int pos = usedVec.getPos();
 
-                if (declaredVec.getSize() >= pos || pos < 0) {
+                if (declaredVec.getSize() <= pos || pos < 0) {
                     SemantErrorReport.getInstancia().semantError(usedVec.getExp(),
-                            "El indice usado en la expresion"
+                            runTimeErrorText
+                            + "El indice usado en la expresion "
                             + usedVec.getTextExpression()
-                            + "esta fuera de los limites del vector declarado \""
+                            + " esta fuera de los limites del vector declarado \""
                             + declaredVec.getNombre().getTexto()
                             + " -> TAMAÑO [" + declaredVec.getSize() + "]\" Pos -> "
                             + usedVec.getExp().getValue());
@@ -228,7 +242,8 @@ public class SemanticVisitor implements Visitor {
 
                 if (size < 1) {
                     SemantErrorReport.getInstancia().semantError(vec.getExp(),
-                            "El valor usado en la declaracion de un vector debe ser MAYOR a 0 \""
+                            runTimeErrorText
+                            + "El valor usado en la declaracion de un vector debe ser MAYOR a 0 \""
                             + vec.getTextExpression()
                             + "\" Valor Expresion -> \""
                             + size
@@ -237,11 +252,13 @@ public class SemanticVisitor implements Visitor {
                 }
                 break;
             case notInicialized:
-                Variable var = (Variable) params[0];
+                Expresion var = (Expresion) params[0];
+                int m = (var instanceof Variable) ? 1 : 2;
 
-                if (var.getValue() == null) {
+                if (var.getValue() == null && m == 1) {
                     SemantErrorReport.getInstancia().semantError(var,
-                            "La variable NUNCA fue INICIALIZADA \""
+                            runTimeErrorText
+                            + "La variable NUNCA fue INICIALIZADA \""
                             + var.getTextExpression()
                             + " -> " + var.getValue()
                             + "\"");
@@ -252,7 +269,8 @@ public class SemanticVisitor implements Visitor {
                 Integer right = (Integer) ((Expresion) params[0]).getValue();
                 if (right.intValue() == 0) {
                     SemantErrorReport.getInstancia().semantError((Expresion) params[0],
-                            "Error de division entre cero");
+                            runTimeErrorText
+                            + "Error de division entre cero");
                     isError = true;
                 }
                 break;
@@ -260,6 +278,7 @@ public class SemanticVisitor implements Visitor {
 
         if (genCode && isError) {
             genCode = false;
+            interpreterInput.getInstance().clearQueue();
         }
 
         return isError;
@@ -314,7 +333,12 @@ public class SemanticVisitor implements Visitor {
 
         if (var != null && !addSemanticError(invalidExpressionType, var, element.getExpr()) && genCode) {
             Variable v = (Variable) var;
-            v.setValue(element.getExpr().getValue());
+            Object value = element.getExpr().getValue();
+            if (v instanceof PosVector) {
+                ((PosVector) v).setPosValue(value, ((PosVector) element.getVariable()).getExp());
+            } else {
+                v.setValue(value);
+            }
         }
     }
 
@@ -324,18 +348,23 @@ public class SemanticVisitor implements Visitor {
         Object fun = table.buscar(element.getId());
 
         if (!addSemanticError(functionNotDefined, fun, element)) {
-            element.getParams().aceptar(this, params);
+            element.getParams().aceptar(this, getValue);
 
             if (!addSemanticError(incorrectParameters, fun, element)) {
+                boolean goodParams = true;
                 ArrayList<ParamFormal> lp = ((FuncionDef) fun).getParametros().getLista();
                 for (int i = 0; i < lp.size(); i++) {
                     ParamFormal paramFormal = lp.get(i);
                     Expresion param = element.getParams().getLista().get(i);
 
                     if (addSemanticError(invalidExpressionType, paramFormal.getTipo().getTipo(), param)) {
-                        //si alguno de los parametros no es de tipo valido
+                        goodParams = false;
                         break;
                     }
+                }
+                if (genCode && goodParams) {
+                    FuncionDef f = (FuncionDef) fun;
+                    interpreterInput.getInstance().push(f.getNombre().getTexto() + " " + element.getParams().getOutParameters());
                 }
             }
         }
@@ -350,17 +379,21 @@ public class SemanticVisitor implements Visitor {
         this.table.crearAmbito();
         element.getCondicion().aceptar(this, getValue);
 
-        this.genCode = false;
+        if ((int) params[0] != notExecution) {
+            this.genCode = false;
+        }
 
         this.table.crearAmbito();
-        element.getEntonces().aceptar(this, execution);
+        element.getEntonces().aceptar(this, notExecution);
 
         if (element.existElsePart()) {
-            element.getSino().aceptar(this, execution);
+            element.getSino().aceptar(this, notExecution);
         }
         this.table.quitarAmbito();
 
-        this.genCode = SemantErrorReport.getInstancia().getErrores() == 0;
+        if ((int) params[0] != notExecution) {
+            this.genCode = SemantErrorReport.getInstancia().getErrores() == 0;
+        }
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getCondicion())
                 && genCode) {
@@ -439,9 +472,11 @@ public class SemanticVisitor implements Visitor {
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getLeftExp())
                 && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getRightExp())
-                && genCode && (int)params[0] == getValue) {
-            Boolean izq = (Boolean)element.getLeftExp().getValue();
-            Boolean der = (Boolean)element.getRightExp().getValue();
+                && genCode && (int) params[0] == getValue
+                && !addRuntimeError(notInicialized, element.getLeftExp())
+                && !addRuntimeError(notInicialized, element.getRightExp())) {
+            Boolean izq = (Boolean) element.getLeftExp().getValue();
+            Boolean der = (Boolean) element.getRightExp().getValue();
             element.setValue(Boolean.valueOf(izq.booleanValue() && der.booleanValue()));
         }
 
@@ -458,9 +493,11 @@ public class SemanticVisitor implements Visitor {
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getLeftExp())
                 && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getRightExp())
-                && genCode && (int)params[0] == getValue) {
-            Boolean izq = (Boolean)element.getLeftExp().getValue();
-            Boolean der = (Boolean)element.getRightExp().getValue();
+                && genCode && (int) params[0] == getValue
+                && !addRuntimeError(notInicialized, element.getLeftExp())
+                && !addRuntimeError(notInicialized, element.getRightExp())) {
+            Boolean izq = (Boolean) element.getLeftExp().getValue();
+            Boolean der = (Boolean) element.getRightExp().getValue();
             element.setValue(Boolean.valueOf(izq.booleanValue() || der.booleanValue()));
         }
 
@@ -475,8 +512,9 @@ public class SemanticVisitor implements Visitor {
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.BOOLEANO];
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getExpr())
-                && genCode && (int)params[0] == getValue) {
-            Boolean not = (Boolean)element.getExpr().getValue();
+                && genCode && (int) params[0] == getValue
+                && !addRuntimeError(notInicialized, element.getExpr())) {
+            Boolean not = (Boolean) element.getExpr().getValue();
             element.setValue(Boolean.valueOf(!not.booleanValue()));
         }
 
@@ -493,7 +531,10 @@ public class SemanticVisitor implements Visitor {
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.BOOLEANO];
 
-        if (!addSemanticError(invalidExpressionType, element.getLeftExp(), element.getRightExp())) {
+        if (!addSemanticError(invalidExpressionType, element.getLeftExp(), element.getRightExp())
+                && genCode && (int) params[0] == getValue
+                && !addRuntimeError(notInicialized, element.getLeftExp())
+                && !addRuntimeError(notInicialized, element.getRightExp())) {
             boolean isBool;
 
             if (element.getType() < Relacionales.IGUAL && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())) {
@@ -502,7 +543,7 @@ public class SemanticVisitor implements Visitor {
                 isBool = element.getLeftExp().getTipo_expr().getTipo() == AbstractSymbol.BOOLEANO;
             }
 
-            if (genCode && (int)params[0] == getValue) {
+            if (genCode) {
                 element.setValue(Boolean.valueOf(element.getExpressionResult(isBool)));
             }
         }
@@ -521,12 +562,14 @@ public class SemanticVisitor implements Visitor {
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
-                && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
-            if (genCode && (int) params[0] == getValue) {
-                Integer left = (Integer) element.getLeftExp().getValue();
-                Integer right = (Integer) element.getRightExp().getValue();
-                element.setValue(new Integer(left + right));
-            }
+                && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())
+                && genCode && (int) params[0] == getValue
+                && !addRuntimeError(notInicialized, element.getLeftExp())
+                && !addRuntimeError(notInicialized, element.getRightExp())) {
+
+            Integer left = (Integer) element.getLeftExp().getValue();
+            Integer right = (Integer) element.getRightExp().getValue();
+            element.setValue(new Integer(left + right));
         }
 
         element.setTipo_expr(type);
@@ -541,12 +584,14 @@ public class SemanticVisitor implements Visitor {
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
-                && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
-            if (genCode && (int) params[0] == getValue) {
-                Integer left = (Integer) element.getLeftExp().getValue();
-                Integer right = (Integer) element.getRightExp().getValue();
-                element.setValue(new Integer(left - right));
-            }
+                && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())
+                && genCode && (int) params[0] == getValue
+                && !addRuntimeError(notInicialized, element.getLeftExp())
+                && !addRuntimeError(notInicialized, element.getRightExp())) {
+
+            Integer left = (Integer) element.getLeftExp().getValue();
+            Integer right = (Integer) element.getRightExp().getValue();
+            element.setValue(new Integer(left - right));
         }
 
         element.setTipo_expr(type);
@@ -561,12 +606,14 @@ public class SemanticVisitor implements Visitor {
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
-                && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
-            if (genCode && (int) params[0] == getValue) {
-                Integer left = (Integer) element.getLeftExp().getValue();
-                Integer right = (Integer) element.getRightExp().getValue();
-                element.setValue(new Integer(left * right));
-            }
+                && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())
+                && genCode && (int) params[0] == getValue
+                && !addRuntimeError(notInicialized, element.getLeftExp())
+                && !addRuntimeError(notInicialized, element.getRightExp())) {
+
+            Integer left = (Integer) element.getLeftExp().getValue();
+            Integer right = (Integer) element.getRightExp().getValue();
+            element.setValue(new Integer(left * right));
         }
 
         element.setTipo_expr(type);
@@ -581,12 +628,15 @@ public class SemanticVisitor implements Visitor {
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
-                && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
-            if (genCode && (int) params[0] == getValue && !addRuntimeError(zeroDivide, element.getRightExp())) {
-                Integer left = (Integer) element.getLeftExp().getValue();
-                Integer right = (Integer) element.getRightExp().getValue();
-                element.setValue(new Integer(left / right));
-            }
+                && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())
+                && genCode && (int) params[0] == getValue
+                && !addRuntimeError(notInicialized, element.getLeftExp())
+                && !addRuntimeError(notInicialized, element.getRightExp())
+                && !addRuntimeError(zeroDivide, element.getRightExp())) {
+
+            Integer left = (Integer) element.getLeftExp().getValue();
+            Integer right = (Integer) element.getRightExp().getValue();
+            element.setValue(new Integer(left / right));
         }
 
         element.setTipo_expr(type);
@@ -601,12 +651,15 @@ public class SemanticVisitor implements Visitor {
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
 
         if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())
-                && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())) {
-            if (genCode && (int) params[0] == getValue && !addRuntimeError(zeroDivide, element.getRightExp())) {
-                Integer left = (Integer) element.getLeftExp().getValue();
-                Integer right = (Integer) element.getRightExp().getValue();
-                element.setValue(new Integer(left % right));
-            }
+                && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getRightExp())
+                && genCode && (int) params[0] == getValue
+                && !addRuntimeError(notInicialized, element.getLeftExp())
+                && !addRuntimeError(notInicialized, element.getRightExp())
+                && !addRuntimeError(zeroDivide, element.getRightExp())) {
+
+            Integer left = (Integer) element.getLeftExp().getValue();
+            Integer right = (Integer) element.getRightExp().getValue();
+            element.setValue(new Integer(left % right));
         }
 
         element.setTipo_expr(type);
@@ -623,7 +676,7 @@ public class SemanticVisitor implements Visitor {
 
         //Seccion de generacion de codigo y ejecucion
         if (genCode && (int) params[0] == getValue) {
-            element.setValue(Integer.getInteger(element.getIntValue()));
+            element.setValue(new Integer(element.getIntValue()));
         }
     }
 
@@ -681,7 +734,7 @@ public class SemanticVisitor implements Visitor {
             int pos = element.getPos();
             if ((int) params[0] == declaration && !addRuntimeError(notPossitiveIndex, element)) {
                 vec.initVector(pos);
-            } else if ((int) params[0] == getValue && !addRuntimeError(indexOutOfBounds, vec, element.getExp())) {
+            } else if ((int) params[0] == getValue && !addRuntimeError(indexOutOfBounds, vec, element)) {
                 element.setValue(vec.getPosValue(pos));
             }
         }

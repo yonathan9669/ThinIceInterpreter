@@ -1,5 +1,6 @@
 package thinice.util;
 
+import Game.interpreterInput;
 import java.util.HashMap;
 import thinice.AST.FuncionDef;
 import thinice.AST.ListaParamFormal;
@@ -15,12 +16,12 @@ public class LenguageKernel {
     private static final AbstractSymbol boolType = AbstractTable.idTabla.addSymbol(AbstractSymbol.nombreTipo[AbstractSymbol.BOOLEANO], 0, 0);
     private static final AbstractSymbol intType = AbstractTable.idTabla.addSymbol(AbstractSymbol.nombreTipo[AbstractSymbol.ENTERO], 0, 0);
     //---------------------------------------
-    public static final AbstractSymbol moveFunc = AbstractTable.idTabla.addSymbol("avanzar", 0, 0);
+    public static final AbstractSymbol moveFunc = AbstractTable.idTabla.addSymbol(interpreterInput.functions[interpreterInput.avanzar], 0, 0);
     //---------------------------------------
-    public static final AbstractSymbol lookUpFunc = AbstractTable.idTabla.addSymbol("mirarArriba", 0, 0);
-    public static final AbstractSymbol lookDownFunc = AbstractTable.idTabla.addSymbol("mirarAbajo", 0, 0);
-    public static final AbstractSymbol lookLeftFunc = AbstractTable.idTabla.addSymbol("mirarIzquierda", 0, 0);
-    public static final AbstractSymbol lookRightFunc = AbstractTable.idTabla.addSymbol("mirarDerecha", 0, 0);
+    public static final AbstractSymbol lookUpFunc = AbstractTable.idTabla.addSymbol(interpreterInput.functions[interpreterInput.mirarArriba], 0, 0);
+    public static final AbstractSymbol lookDownFunc = AbstractTable.idTabla.addSymbol(interpreterInput.functions[interpreterInput.mirarAbajo], 0, 0);
+    public static final AbstractSymbol lookLeftFunc = AbstractTable.idTabla.addSymbol(interpreterInput.functions[interpreterInput.mirarIzquierda], 0, 0);
+    public static final AbstractSymbol lookRightFunc = AbstractTable.idTabla.addSymbol(interpreterInput.functions[interpreterInput.mirarDerecha], 0, 0);
     //---------------------------------------
     public static final AbstractSymbol[] symbolType = {nonType, boolType, intType};
     //  </editor-fold>

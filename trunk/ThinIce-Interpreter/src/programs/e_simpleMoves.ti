@@ -9,32 +9,22 @@ programa(){
 	
 	y := (x + 2 >= 1) Y (x * 2 <= 7);
 
-	avanzar(1 + x);
-	mirarArriba();
-
-	//avanzar(1 + x*w, prueba);
-	//mirarArriba(true);
+	avanzar(1 + x*w, prueba);
+	mirarArriba(true);
 
 	y := !y;
 	
 	avanzar(x - 3);
-	mirarAbajo();
-	
-	//mirarAbajo(6);
+	mirarAbajo(6);
 
-	y := x < 2;
+	y := x + 2;
 	
-	avanzar(x);
-	mirarIzquierda();
-	
-	//avanzar(y);
-	//mirarIzquierda(6);
+	avanzar(y);
+	mirarIzquierda(6);
 	
 	x := x / 4;
 	avanzar(x + 1);
-	mirarDerecha();	
-
-	//mirarDerecha(6);
+	mirarDerecha(6);
 
 	// prueba de errores LEXICOS
 	/* probando / los * comentarios *  ****/

@@ -17,7 +17,7 @@ programa(){
 	}
 
 	do
-		y := 43;
+		//y := 43;
 
 		entero i;
 		for(i := 0 ; i := i + 1 ; i < 10){

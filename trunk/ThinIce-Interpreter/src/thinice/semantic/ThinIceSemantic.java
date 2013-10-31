@@ -1,5 +1,6 @@
 package thinice.semantic;
 
+import Game.interpreterInput;
 import thinice.AST.FuncionDef;
 import thinice.AST.Programa;
 import thinice.TS.SymbolsTable;
@@ -19,6 +20,7 @@ public class ThinIceSemantic {
     //---------------------------Public Attributes------------------------------
     // <editor-fold desc="Public Attributes">
     public SemantErrorReport errors;
+    public interpreterInput output;
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
@@ -47,8 +49,10 @@ public class ThinIceSemantic {
     //---------------------------Public Methods--------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Public Methods">
     public int walkTheTree(){
-        SemanticVisitor semantVisitor = new SemanticVisitor();
+        MIMOVisitor semantVisitor = new MIMOVisitor();
         
+        output = new interpreterInput();
+        SemantErrorReport.getInstancia().resetErrors();
         this.table = semantVisitor.getTable();
         this.addKernelFuntions();
         

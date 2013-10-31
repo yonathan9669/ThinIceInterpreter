@@ -23,7 +23,20 @@ public class ListaParametros extends NodoLista<Expresion>{
         
         return params.substring(0, params.lastIndexOf(","));
     }
+    
     //---------------------------------------
+    public String getOutParameters(){
+        if(this.lista.isEmpty())
+            return "";
+        
+        String params = "";
+        
+        for (Expresion expresion : lista) {
+            params += expresion.getValue().toString() + ", ";
+        }
+        
+        return params.substring(0, params.lastIndexOf(","));
+    }
     //  </editor-fold>
     //---------------------------Override Methods------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Override Methods">
