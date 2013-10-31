@@ -374,7 +374,7 @@ public class SemanticVisitor implements Visitor {
             this.table.crearAmbito();
             element.getSentencias().aceptar(this, execution);
             this.table.quitarAmbito();
-            
+
             element.getCondicion().aceptar(this, getValue);
             if (!typeVerified) {
                 typeVerified = true;
@@ -386,13 +386,28 @@ public class SemanticVisitor implements Visitor {
     //---------------------------------------
     @Override
     public void visitar(RepitaPara element, Object... params) {
-        this.table.crearAmbito();
-        element.getInicialization().aceptar(this, params);
-        element.getStep().aceptar(this, params);
-        element.getCondicion().aceptar(this, params);
+        element.getInicialization().aceptar(this, execution);
+        element.getCondicion().aceptar(this, getValue);
 
-        if (!addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getCondicion())) {
-            //si la condicion es de tipo bool
+        this.table.crearAmbito();
+        if (addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getCondicion()) || !genCode) {
+            element.getStep().aceptar(this, execution);
+            element.getSentencias().aceptar(this, execution);
+        } else {
+            if (!((Boolean) element.getCondicion().getValue()).booleanValue()) {
+                this.genCode = false;
+                element.getStep().aceptar(this, execution);
+                element.getSentencias().aceptar(this, execution);
+                this.genCode = SemantErrorReport.getInstancia().getErrores() == 0;
+            } else {
+                while (genCode && ((Boolean) element.getCondicion().getValue()).booleanValue()) {
+                    this.table.crearAmbito();
+                    element.getSentencias().aceptar(this, execution);
+                    this.table.quitarAmbito();
+                    element.getStep().aceptar(this, execution);
+                    element.getCondicion().aceptar(this, getValue);
+                }
+            }
         }
         this.table.quitarAmbito();
     }
@@ -459,14 +474,23 @@ public class SemanticVisitor implements Visitor {
 
     @Override
     public void visitar(Relacionales element, Object... params) {
-        element.getLeftExp().aceptar(this, params);
-        element.getRightExp().aceptar(this, params);
+        element.getLeftExp().aceptar(this, getValue);
+        element.getRightExp().aceptar(this, getValue);
 
         AbstractSymbol type = LenguageKernel.symbolType[AbstractSymbol.BOOLEANO];
 
         if (!addSemanticError(invalidExpressionType, element.getLeftExp(), element.getRightExp())) {
-            //si ambas expresiones son del mismo tipo
-            //type = LenguageKernel.symbolType[AbstractSymbol.ENTERO];
+            boolean isBool;
+
+            if (element.getType() < Relacionales.IGUAL && !addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.ENTERO), element.getLeftExp())) {
+                isBool = false;
+            } else {
+                isBool = element.getLeftExp().getTipo_expr().getTipo() == AbstractSymbol.BOOLEANO;
+            }
+
+            if (genCode && (int)params[0] == getValue) {
+                element.setValue(Boolean.valueOf(element.getExpressionResult(isBool)));
+            }
         }
 
         element.setTipo_expr(type);
