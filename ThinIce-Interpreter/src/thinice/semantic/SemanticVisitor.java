@@ -377,6 +377,7 @@ public class SemanticVisitor implements Visitor {
             
             element.getCondicion().aceptar(this, getValue);
             if (!typeVerified) {
+                typeVerified = true;
                 addSemanticError(invalidExpressionType, new Integer(AbstractSymbol.BOOLEANO), element.getCondicion());
             }
         } while (genCode && ((Boolean) element.getCondicion().getValue()).booleanValue());
