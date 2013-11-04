@@ -19,11 +19,12 @@ public interface Parameters {
     public static String [] box_images = {"hielo.png",
                                           "usado.png",
                                           "libre.png",
-                                           "nada.png"};
-    public static String [] table_images = {"level1.png",
-                                          "usado.png",
-                                          "libre.png",
-                                           "nada.png"};
+                                           "nada.png",
+                                           "der.png",
+                                           "izq.png",
+                                           "arriba.png",
+                                           "abajo.png"};
+    
     public static String [] world_images={"world1.png",
                                           "world2.png",
                                           "world3.png"};
