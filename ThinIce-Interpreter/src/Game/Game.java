@@ -1,85 +1,89 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package Game;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import thinice.AST.Programa;
+import thinice.lexer.ThinIceLexer;
+import thinice.parser.ThinIceParser;
+import thinice.semantic.SemantErrorReport;
+import thinice.semantic.ThinIceSemantic;
 
-/**
- *
- * @author Moises
- */
 public class Game extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Game
-     */
     private Table tablero;
     private JFileChooser ruta;
-    private boolean star;
-    
+    private boolean start;
+    private ArrayList<String> lista = new ArrayList<>();
+
     public Game() {
-        
+
         initComponents();
         this.setLocationRelativeTo(null);
-        
+
         this.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e){
+            public void windowClosing(WindowEvent e) {
                 salir();
             }
         });
         tablero = new Table();
-       tablero.setVisible(false);
-       this.getLayeredPane().add(tablero);
+        tablero.setVisible(false);
+        this.getLayeredPane().add(tablero);
+        Next.setVisible(false);
 
-       
         loadImageworld();
         //iniciar();
     }
-    public void loadImageworld(){
-        
+
+    public void loadImageworld() {
+
         String previewFile = Parameters.world_images[this.jComboBox1.getSelectedIndex()];
-        this.level_Image.setIcon(new ImageIcon(getClass().getClassLoader().getResource(Parameters.path_world+previewFile)));
-        
+        this.level_Image.setIcon(new ImageIcon(getClass().getClassLoader().getResource(Parameters.path_world + previewFile)));
+
     }
-    public void salir(){
-        if(JOptionPane.showConfirmDialog(this, "Desea Salir?","Salir",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
+
+    public void salir() {
+        if (JOptionPane.showConfirmDialog(this, "Desea Salir?", "Salir", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }
+
     public void star_game() {
         try {
-            this.jPanel1.setVisible(false);
+            this.configurationPanel.setVisible(false);
             tablero.setVisible(true);
             this.tablero.leer(this.jComboBox1.getSelectedIndex());
-            this.tablero.pintar(0);
+            this.Next.setVisible(true);
+
             this.jButton1.setText("Parar");
         } catch (IOException | URISyntaxException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    public void end_game(){
-        this.jPanel1.setVisible(true);
+
+    public void end_game() {
+        this.configurationPanel.setVisible(true);
         this.jButton1.setText("Iniciar");
         tablero.setVisible(false);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -89,25 +93,26 @@ public class Game extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        configurationPanel = new javax.swing.JPanel();
         jComboBox1 = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         level_Image = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
+        ioPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        inputProgram = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton3 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        Output = new javax.swing.JTextArea();
+        uploadButton = new javax.swing.JButton();
+        starButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        Next = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, java.awt.Color.black), "Game"));
+        configurationPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, java.awt.Color.black), "Game"));
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nivel 1", "Nivel 2", "Nivel 3" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -118,25 +123,25 @@ public class Game extends javax.swing.JFrame {
 
         jLabel1.setText("Seleccione Nivel de Juego:");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout configurationPanelLayout = new javax.swing.GroupLayout(configurationPanel);
+        configurationPanel.setLayout(configurationPanelLayout);
+        configurationPanelLayout.setHorizontalGroup(
+            configurationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(configurationPanelLayout.createSequentialGroup()
                 .addContainerGap(112, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(166, 166, 166))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, configurationPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(level_Image, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        configurationPanelLayout.setVerticalGroup(
+            configurationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(configurationPanelLayout.createSequentialGroup()
+                .addGroup(configurationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(36, 36, 36)
@@ -155,13 +160,13 @@ public class Game extends javax.swing.JFrame {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuraciones"));
+        ioPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuraciones"));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Entrada de Datos"));
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        inputProgram.setColumns(20);
+        inputProgram.setRows(5);
+        jScrollPane2.setViewportView(inputProgram);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -181,9 +186,9 @@ public class Game extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Salida"));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        Output.setColumns(20);
+        Output.setRows(5);
+        jScrollPane1.setViewportView(Output);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -201,42 +206,47 @@ public class Game extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jButton3.setText("Adjuntar Codigo");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        uploadButton.setText("Adjuntar Codigo");
+        uploadButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                uploadButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Iniciar");
+        starButton.setText("Iniciar");
+        starButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                starButtonActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        javax.swing.GroupLayout ioPanelLayout = new javax.swing.GroupLayout(ioPanel);
+        ioPanel.setLayout(ioPanelLayout);
+        ioPanelLayout.setHorizontalGroup(
+            ioPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ioPanelLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(ioPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ioPanelLayout.createSequentialGroup()
+                        .addGroup(ioPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(19, Short.MAX_VALUE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jButton3)
+                    .addGroup(ioPanelLayout.createSequentialGroup()
+                        .addComponent(uploadButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2)
+                        .addComponent(starButton)
                         .addGap(29, 29, 29))))
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        ioPanelLayout.setVerticalGroup(
+            ioPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ioPanelLayout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton2))
+                .addGroup(ioPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(uploadButton)
+                    .addComponent(starButton))
                 .addGap(38, 38, 38)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -249,19 +259,28 @@ public class Game extends javax.swing.JFrame {
             }
         });
 
+        Next.setText("Next");
+        Next.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NextActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ioPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(configurationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(93, 93, 93))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(Next, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(173, 173, 173)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(67, 67, 67))
@@ -271,15 +290,17 @@ public class Game extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(ioPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(configurationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(46, 46, 46)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(32, 32, 32)
-                        .addComponent(jButton1)))
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(Next)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -287,42 +308,107 @@ public class Game extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-           loadImageworld();
+        loadImageworld();
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-    try {
-                    BufferedReader lea = null;
-                        String linea;
-                        ruta = new JFileChooser();
-                        ruta.showOpenDialog(null);
-                        File tab;
-                        tab = ruta.getSelectedFile();
-                        lea = new BufferedReader( new FileReader(tab) );
-                        while((linea=lea.readLine())!=null){
-                            jTextArea2.append(linea);
-                            jTextArea2.append("\n");
-                            
-                        }
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-                }                    // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void uploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadButtonActionPerformed
+        try {
+            BufferedReader lea = null;
+            String linea;
+            ruta = new JFileChooser("src/programs/");
+            ruta.showOpenDialog(null);
+            File tab;
+            tab = ruta.getSelectedFile();
+            lea = new BufferedReader(new FileReader(tab));
+            while ((linea = lea.readLine()) != null) {
+                inputProgram.append(linea);
+                inputProgram.append("\n");
+
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }                    // TODO add your handling code here:
+    }//GEN-LAST:event_uploadButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if(this.star){
+        if (this.start) {
             end_game();
-            this.star=false;
-        }
-        else{
+            this.start = false;
+        } else {
             this.star_game();
-            this.star=true;
+            this.start = true;
         }
-        
+
         System.out.println(this.jComboBox1.getSelectedIndex());
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void starButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_starButtonActionPerformed
+        try {
+            Output.setText("");
+            InputStream stream = new ByteArrayInputStream(inputProgram.getText().getBytes());
+            ThinIceLexer lexer = new ThinIceLexer(stream);
+            lexer.setNombreArchivo("corriendo.ti");
+            ThinIceParser parser = new ThinIceParser(lexer);
+            Programa result = (Programa) (parser.parse().value);
+            if (parser.getOmerrs() > 0) {
+                Output.append("El análisis SINTACTICO ha terminado con " + parser.getOmerrs() + " errores");
+            }
+            Output.append("El análisis SINTACTICO ha terminado con EXITO");
+            ThinIceSemantic semantic = new ThinIceSemantic(result);
+            if (semantic.walkTheTree() > 0) {
+                System.err.println("El análisis SEMANTICO ha terminado con " + SemantErrorReport.getInstancia().getErrores() + " errores");
+            }
+
+            while (!interpreterInput.getInstance().IsEmpty()) {
+                String lec = interpreterInput.getInstance().poll();
+                Output.append("\n" + lec);
+                lista.add(lec);
+
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_starButtonActionPerformed
+
+    private void NextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextActionPerformed
+
+        for (String st : lista) {
+            String funcion = "";
+            int parametro = 0;
+            boolean tieneParametros = false;
+
+            StringTokenizer tok = new StringTokenizer(st, " ");
+            if (tok.hasMoreTokens()) {
+                funcion = tok.nextToken();
+            }
+            if (tok.hasMoreTokens()) {
+                parametro = Integer.valueOf(tok.nextToken());
+                tieneParametros = true;
+            }
+
+            switch (funcion) {
+                case "mirarArriba":
+                    tablero.mirarArriba();
+                    break;
+                case "mirarAbajo":
+                    tablero.mirarAbajo();
+                    break;
+                case "mirarIzquierda":
+                    tablero.mirarIzquierda();
+                    break;
+                case "mirarDerecha":
+                    tablero.mirarDerecha();
+                    break;
+                case "avanzar":
+                    tablero.avanzar(parametro);
+                    break;
+            }
+
+        }
+    }//GEN-LAST:event_NextActionPerformed
 
     /**
      * @param args the command line arguments
@@ -360,20 +446,21 @@ public class Game extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Next;
+    private javax.swing.JTextArea Output;
+    private javax.swing.JPanel configurationPanel;
+    private javax.swing.JTextArea inputProgram;
+    private javax.swing.JPanel ioPanel;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JLabel level_Image;
+    private javax.swing.JButton starButton;
+    private javax.swing.JButton uploadButton;
     // End of variables declaration//GEN-END:variables
 }

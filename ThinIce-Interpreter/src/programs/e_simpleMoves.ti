@@ -1,5 +1,6 @@
 programa(){
 
+	entero a = 8;
     entero vec[10];
     
     entero z := - 3 mod - 4 / -5 + -5;
@@ -13,7 +14,7 @@ programa(){
 	mirarArriba(true);
 
 	y := !y;
-	
+
 	avanzar(x - 3);
 	mirarAbajo(6);
 

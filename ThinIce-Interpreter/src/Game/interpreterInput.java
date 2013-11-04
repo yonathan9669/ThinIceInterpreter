@@ -17,26 +17,38 @@ public class interpreterInput {
     //  </editor-fold>
     //---------------------------Private Attributes-----------------------------
     // <editor-fold desc="Private Attributes">
-    private Queue a;
+    private Queue queueOutput;
     //---------------------------------------
     private static interpreterInput input = null;
+    private static interpreterInput errors = null;
     //  </editor-fold>
     //---------------------------Constructors-----------------------------------
     // <editor-fold defaultstate="collapsed" desc="Constructors">
     public interpreterInput(){
-        a = new ArrayDeque();
+        queueOutput = new ArrayDeque();
     }
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Getters---------------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Getters">
+    public String poll(){
+        return (String) this.queueOutput.poll();   
+    }
+    public boolean IsEmpty(){
+        return this.queueOutput.isEmpty();
+    }
+    
+    
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Setters---------------------------------------- 
     // <editor-fold defaultstate="collapsed" desc="Setters">
     public void push(String input){
-        a.add(input);
+        queueOutput.add(input);
+       
     }
+    
+    
     //---------------------------------------
     //  </editor-fold>
     //---------------------------Static Methods--------------------------------- 
@@ -47,11 +59,21 @@ public class interpreterInput {
         return input;
     }
     //---------------------------------------
+    public static interpreterInput getErrors(){
+        if(errors == null)
+            errors = new interpreterInput();
+        return errors;
+    }
+    //---------------------------------------
     //  </editor-fold>
     //---------------------------Public static Methods--------------------------
     // <editor-fold defaultstate="collapsed" desc="Public Methods">
     public void clearQueue(){
-        input.a.clear();
+        input.queueOutput.clear();
+    }
+    public int size(){
+        return input.size();
+        
     }
     //---------------------------------------
     //  </editor-fold>
