@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Queue;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +28,8 @@ public class Game extends javax.swing.JFrame {
     private Table tablero;
     private JFileChooser ruta;
     private boolean start;
-    private ArrayList<String> lista = new ArrayList<>();
+    private Thread moveThread;
+    private int steps;
 
     public Game() {
 
@@ -48,6 +48,7 @@ public class Game extends javax.swing.JFrame {
         Next.setVisible(false);
 
         loadImageworld();
+        moveThread = new Thread("moveThread");
         //iniciar();
     }
 
@@ -352,20 +353,22 @@ public class Game extends javax.swing.JFrame {
             lexer.setNombreArchivo("corriendo.ti");
             ThinIceParser parser = new ThinIceParser(lexer);
             Programa result = (Programa) (parser.parse().value);
+
             if (parser.getOmerrs() > 0) {
-                Output.append("El análisis SINTACTICO ha terminado con " + parser.getOmerrs() + " errores");
-            }
-            Output.append("El análisis SINTACTICO ha terminado con EXITO");
-            ThinIceSemantic semantic = new ThinIceSemantic(result);
-            if (semantic.walkTheTree() > 0) {
-                System.err.println("El análisis SEMANTICO ha terminado con " + SemantErrorReport.getInstancia().getErrores() + " errores");
-            }
+                Output.append("\nEl análisis SINTACTICO ha terminado con " + parser.getOmerrs() + " errores");
+            } else {
+                Output.append("\nEl análisis SINTACTICO ha terminado con EXITO");
+                ThinIceSemantic semantic = new ThinIceSemantic(result);
 
-            while (!interpreterInput.getInstance().IsEmpty()) {
-                String lec = interpreterInput.getInstance().poll();
-                Output.append("\n" + lec);
-                lista.add(lec);
+                if (semantic.walkTheTree() > 0) {
+                    Output.append("\nEl análisis SEMANTICO ha terminado con " + SemantErrorReport.getInstancia().getErrores() + " errores");
+                } else {
 
+                    Output.append("\nEl análisis SEMANTICO ha terminado con EXITO");
+                    for (Object instructions : interpreterInput.getInstance().getItems()) {
+                        Output.append("\n" + (String) instructions);
+                    }
+                }
             }
         } catch (Exception ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
@@ -375,50 +378,41 @@ public class Game extends javax.swing.JFrame {
 
     private void NextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextActionPerformed
 
-        for (String st : lista) {
+        if (!interpreterInput.getInstance().IsEmpty()) {
             String funcion = "";
             int parametro = 0;
-            boolean tieneParametros = false;
 
-            StringTokenizer tok = new StringTokenizer(st, " ");
+            StringTokenizer tok = new StringTokenizer(interpreterInput.getInstance().poll(), " ");
+
             if (tok.hasMoreTokens()) {
                 funcion = tok.nextToken();
             }
             if (tok.hasMoreTokens()) {
                 parametro = Integer.valueOf(tok.nextToken());
-                tieneParametros = true;
             }
 
-            switch (funcion) {
-                case "mirarArriba":
-                    tablero.mirarArriba();
-                    break;
-                case "mirarAbajo":
-                    tablero.mirarAbajo();
-                    break;
-                case "mirarIzquierda":
-                    tablero.mirarIzquierda();
-                    break;
-                case "mirarDerecha":
-                    tablero.mirarDerecha();
-                    break;
-                case "avanzar":
-                    tablero.avanzar(parametro);
-                    break;
+            if (parametro == 0) {
+                tablero.mirar(interpreterInput.getDirection(funcion));
+            } else {
+
+                while (moveThread.isAlive());
+
+                steps = parametro;
+                moveThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tablero.avanzar(steps);
+                    }
+                });
+                moveThread.start();
             }
 
+            this.repaint();
         }
     }//GEN-LAST:event_NextActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -444,7 +438,6 @@ public class Game extends javax.swing.JFrame {
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Next;
     private javax.swing.JTextArea Output;

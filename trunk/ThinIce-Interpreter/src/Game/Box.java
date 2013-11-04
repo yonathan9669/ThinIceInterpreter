@@ -10,15 +10,13 @@ public class Box extends JLabel {
     private int posX, posY;
     private int tipoCasilla;
 
-    public Box(int posX, int posY, int tipoCasilla, Table tablero) {
+    public Box(int posX, int posY, int tipoCasilla) {
         this.posX = posX;
         this.posY = posY;
         this.tipoCasilla = tipoCasilla;
         
         this.setIcon(new ImageIcon(getClass().getClassLoader().getResource(Parameters.path_box + Parameters.box_images[tipoCasilla])));
         this.setBounds(posX * width, posY * height, 25, 25);
-        
-        tablero.add(this);
     }
 
     public int getTipoCasilla() {
