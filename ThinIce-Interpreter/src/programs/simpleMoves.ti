@@ -1,14 +1,30 @@
 programa(){
-	entero x := 3;
+	entero x := 8;
 
-	mirarArriba();
+	mirarAbajo();
 	avanzar(x);
 	x := x-1;
 	
 	mirarIzquierda();
 	
 	entero i;
-	for(i:=0;i:=i+1; i<2){
-		avanzar(x +i *4);
+	booleano dir := true;
+	x := 1;
+
+	for(i:=0; i:=i+1; i<10){
+		avanzar(x);
+
+		if(i mod 2 = 0){
+			dir := !dir;
+			if(dir){
+				mirarAbajo();
+			}
+			else{
+				mirarArriba();
+			}
+		}
+		else{
+			mirarIzquierda();
+		}
 	}
 }

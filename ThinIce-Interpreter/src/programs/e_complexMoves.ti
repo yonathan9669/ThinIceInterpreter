@@ -5,6 +5,8 @@ programa(){
 	booleano vec[10];
 
 	mirrarArriba();
+	x();
+	vec();
 
 	if(x = 1){
 		entero y := x + -2;
